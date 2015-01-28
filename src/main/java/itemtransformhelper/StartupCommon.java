@@ -1,5 +1,6 @@
 package itemtransformhelper;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class StartupCommon
 {
   public static ItemCamera itemCamera;  // this holds the unique instance of your block
+  public static CreativeTabs tabITH = new CreativeTabITH(CreativeTabs.getNextID(), "itemtransformhelper");
 
   public static void preInitCommon()
   {

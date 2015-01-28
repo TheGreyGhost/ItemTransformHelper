@@ -1,6 +1,5 @@
 package itemtransformhelper;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +19,7 @@ public class ItemCamera extends Item
   public ItemCamera()
   {
     this.setMaxStackSize(1);
-    this.setCreativeTab(CreativeTabs.tabMisc);   // the item will appear on the Miscellaneous tab in creative
+    this.setCreativeTab(StartupCommon.tabITH);
   }
 
   // adds 'tooltip' text

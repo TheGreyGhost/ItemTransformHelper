@@ -33,7 +33,7 @@ public class StartupClientOnly
   public static void initClientOnly()
   {
     // required in order for the renderer to know how to render your item.  Likely to change in the near future.
-    ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation("itemstransformhelper:item_camera", "inventory");
+    ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation("itemtransformhelper:item_camera", "inventory");
     final int DEFAULT_ITEM_SUBTYPE = 0;
     Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(StartupCommon.itemCamera, DEFAULT_ITEM_SUBTYPE, itemModelResourceLocation);
   }
