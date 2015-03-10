@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  * Every tick, check all the items in the hotbar to see if any are the mbe14 ItemCamera.  If so, apply the transform
  *   override to the held item.
  */
+@SuppressWarnings("deprecation")
 public class ClientTickHandler
 {
   @SubscribeEvent
@@ -27,7 +28,7 @@ public class ClientTickHandler
 
     boolean foundCamera = false;
     InventoryPlayer inventoryPlayer = player.inventory;
-    for (int i = 0; i < inventoryPlayer.getHotbarSize(); ++i) {
+    for (int i = 0; i < InventoryPlayer.getHotbarSize(); ++i) {
       ItemStack slotItemStack = inventoryPlayer.mainInventory[i];
       if (slotItemStack != null && slotItemStack.getItem() == StartupCommon.itemCamera) {
         foundCamera = true;

@@ -1,5 +1,9 @@
 package itemtransformhelper;
 
+import java.util.ArrayList;
+
+import javax.vecmath.Vector3f;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,15 +14,13 @@ import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import javax.vecmath.Vector3f;
-import java.util.ArrayList;
-
 /**
  * User: The Grey Ghost
  * Date: 20/01/2015
  * Class to draw the menu on the screen
  *
  */
+@SuppressWarnings("deprecation")
 public class HUDtextRenderer
 {
   /**

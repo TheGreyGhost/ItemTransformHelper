@@ -10,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -18,6 +19,7 @@ import org.lwjgl.input.Keyboard;
  * The class registers its components on the Forge and FML event buses.
  * Created by TheGreyGhost on 22/01/15.
  */
+@SuppressWarnings("deprecation")
 public class MenuItemCameraTransforms
 {
   public MenuItemCameraTransforms()
@@ -58,6 +60,7 @@ public class MenuItemCameraTransforms
           alterField(whichKey == MenuKeyHandler.ArrowKeys.RIGHT);
           break;
         }
+        case NONE:
       }
     }
   }

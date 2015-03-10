@@ -1,11 +1,12 @@
 package itemtransformhelper;
 
+import java.util.List;
+
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
-
-import java.util.List;
 
 /**
  * User: The Grey Ghost
@@ -19,6 +20,7 @@ import java.util.List;
  *   b) forcedTransform is the transform to apply
  * Models which don't match itemModelToOverride will use their original transform
  */
+@SuppressWarnings({ "deprecation", "unchecked" })
 public class ItemModelFlexibleCamera implements IBakedModel
 {
   public ItemModelFlexibleCamera(IBakedModel i_modelToWrap, UpdateLink linkToCurrentInformation)
@@ -28,12 +30,12 @@ public class ItemModelFlexibleCamera implements IBakedModel
   }
 
   @Override
-  public List getFaceQuads(EnumFacing enumFacing) {
+  public List<BakedQuad> getFaceQuads(EnumFacing enumFacing) {
     return iBakedModel.getFaceQuads(enumFacing);
   }
 
   @Override
-  public List getGeneralQuads() {
+  public List<BakedQuad> getGeneralQuads() {
     return iBakedModel.getGeneralQuads();
   }
 
