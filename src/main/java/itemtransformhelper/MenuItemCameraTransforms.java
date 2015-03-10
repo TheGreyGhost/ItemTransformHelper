@@ -1,5 +1,7 @@
 package itemtransformhelper;
 
+import java.util.Locale;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
@@ -161,24 +163,24 @@ public class MenuItemCameraTransforms
   }
 
   private static void printTransform(StringBuilder output, String transformView, ItemTransformVec3f itemTransformVec3f) {
-    output.append("  \"" + transformView + "\":{\n");
-    output.append("    \"rotation\": [");
-    output.append(String.format("%.0f, ", itemTransformVec3f.rotation.getX()));
-    output.append(String.format("%.0f, ", itemTransformVec3f.rotation.getY()));
-    output.append(String.format("%.0f],", itemTransformVec3f.rotation.getZ()));
+    output.append("    \"" + transformView + "\": {\n");
+    output.append("        \"rotation\": [ ");
+    output.append(String.format(Locale.US, "%.0f, ", itemTransformVec3f.rotation.getX()));
+    output.append(String.format(Locale.US, "%.0f, ", itemTransformVec3f.rotation.getY()));
+    output.append(String.format(Locale.US, "%.0f ],", itemTransformVec3f.rotation.getZ()));
     output.append("\n");
 
     final double TRANSLATE_MULTIPLIER = 1/ 0.0625;   // see ItemTransformVec3f::deserialize0()
-    output.append("    \"translation\": [");
-    output.append(String.format("%.2f, ", itemTransformVec3f.translation.getX() * TRANSLATE_MULTIPLIER));
-    output.append(String.format("%.2f, ", itemTransformVec3f.translation.getY() * TRANSLATE_MULTIPLIER));
-    output.append(String.format("%.2f],", itemTransformVec3f.translation.getZ() * TRANSLATE_MULTIPLIER));
+    output.append("        \"translation\": [ ");
+    output.append(String.format(Locale.US, "%.2f, ", itemTransformVec3f.translation.getX() * TRANSLATE_MULTIPLIER));
+    output.append(String.format(Locale.US, "%.2f, ", itemTransformVec3f.translation.getY() * TRANSLATE_MULTIPLIER));
+    output.append(String.format(Locale.US, "%.2f ],", itemTransformVec3f.translation.getZ() * TRANSLATE_MULTIPLIER));
     output.append("\n");
-    output.append("    \"scale\": [");
-    output.append(String.format("%.2f, ", itemTransformVec3f.scale.getX()));
-    output.append(String.format("%.2f, ", itemTransformVec3f.scale.getY()));
-    output.append(String.format("%.2f]", itemTransformVec3f.scale.getZ()));
-    output.append("\n  }");
+    output.append("        \"scale\": [ ");
+    output.append(String.format(Locale.US, "%.2f, ", itemTransformVec3f.scale.getX()));
+    output.append(String.format(Locale.US, "%.2f, ", itemTransformVec3f.scale.getY()));
+    output.append(String.format(Locale.US, "%.2f ]", itemTransformVec3f.scale.getZ()));
+    output.append("\n    }");
   }
 
   private static void copyTransforms(ItemTransformVec3f from, ItemTransformVec3f to)
