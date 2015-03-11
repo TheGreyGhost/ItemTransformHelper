@@ -1,11 +1,17 @@
 package itemtransformhelper;
 
+import java.util.List;
+
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-
-import java.util.List;
+import net.minecraftforge.client.model.Attributes;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraftforge.client.model.ISmartItemModel;
 
 /**
  * User: The Grey Ghost
@@ -19,21 +25,23 @@ import java.util.List;
  *   b) forcedTransform is the transform to apply
  * Models which don't match itemModelToOverride will use their original transform
  */
-public class ItemModelFlexibleCamera implements IBakedModel
+@SuppressWarnings({ "deprecation", "unchecked" })
+public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemModel
 {
   public ItemModelFlexibleCamera(IBakedModel i_modelToWrap, UpdateLink linkToCurrentInformation)
   {
     updateLink = linkToCurrentInformation;
     iBakedModel = i_modelToWrap;
+    wrappedModel = i_modelToWrap;
   }
 
   @Override
-  public List getFaceQuads(EnumFacing enumFacing) {
+  public List<BakedQuad> getFaceQuads(EnumFacing enumFacing) {
     return iBakedModel.getFaceQuads(enumFacing);
   }
 
   @Override
-  public List getGeneralQuads() {
+  public List<BakedQuad> getGeneralQuads() {
     return iBakedModel.getGeneralQuads();
   }
 
@@ -62,18 +70,35 @@ public class ItemModelFlexibleCamera implements IBakedModel
     return (updateLink.itemModelToOverride == this) ? updateLink.forcedTransform : iBakedModel.getItemCameraTransforms();
   }
 
+  @Override
+  public IBakedModel handleItemState(ItemStack stack) {
+      if (wrappedModel instanceof ISmartItemModel) {
+          iBakedModel = ((ISmartItemModel)wrappedModel).handleItemState(stack);
+      }
+      return this;
+  }
+
+  @Override
+  public VertexFormat getFormat() {
+      if (iBakedModel instanceof IFlexibleBakedModel)
+      {
+          return ((IFlexibleBakedModel)iBakedModel).getFormat();
+      }
+      return Attributes.DEFAULT_BAKED_FORMAT;
+  }
+
   private final UpdateLink updateLink;
 
   public IBakedModel getIBakedModel() {
     return iBakedModel;
   }
 
-  private final IBakedModel iBakedModel;
+  private IBakedModel iBakedModel;
+  private IBakedModel wrappedModel;
 
   public static class UpdateLink
   {
     public IBakedModel itemModelToOverride;
     public ItemCameraTransforms forcedTransform;
   }
-
 }

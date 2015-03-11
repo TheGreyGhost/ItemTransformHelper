@@ -1,12 +1,12 @@
 package itemtransformhelper;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 /**
  * User: The Grey Ghost
@@ -24,7 +24,7 @@ public class ItemCamera extends Item
 
   // adds 'tooltip' text
   @SideOnly(Side.CLIENT)
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public void addInformation(ItemStack stack, EntityPlayer playerIn, List tooltip, boolean advanced) {
     tooltip.add("1) Place the camera in your hotbar");

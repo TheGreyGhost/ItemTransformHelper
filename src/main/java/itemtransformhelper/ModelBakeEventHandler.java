@@ -1,6 +1,5 @@
 package itemtransformhelper;
 
-import itemtransformhelper.ItemModelFlexibleCamera;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -17,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Each wrapped model gets a reference to ModelBakeEventHandler::itemOverrideLink.
  * Later, we can alter the members of itemOverrideLink to change the ItemCameraTransforms for a desired Item
  */
+@SuppressWarnings("deprecation")
 public class ModelBakeEventHandler
 {
   public ModelBakeEventHandler()
