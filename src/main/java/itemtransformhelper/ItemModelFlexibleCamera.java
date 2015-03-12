@@ -2,6 +2,7 @@ package itemtransformhelper;
 
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraftforge.client.model.ISmartBlockModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 
 /**
@@ -26,7 +28,7 @@ import net.minecraftforge.client.model.ISmartItemModel;
  * Models which don't match itemModelToOverride will use their original transform
  */
 @SuppressWarnings({ "deprecation", "unchecked" })
-public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemModel
+public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemModel, ISmartBlockModel
 {
   public ItemModelFlexibleCamera(IBakedModel i_modelToWrap, UpdateLink linkToCurrentInformation)
   {
@@ -71,20 +73,28 @@ public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemM
   }
 
   @Override
+  public IBakedModel handleBlockState(IBlockState iBlockState) {
+    if (wrappedModel instanceof ISmartBlockModel) {
+      iBakedModel = ((ISmartBlockModel)wrappedModel).handleBlockState(iBlockState);
+    }
+    return this;
+  }
+
+  @Override
   public IBakedModel handleItemState(ItemStack stack) {
-      if (wrappedModel instanceof ISmartItemModel) {
-          iBakedModel = ((ISmartItemModel)wrappedModel).handleItemState(stack);
-      }
-      return this;
+    if (wrappedModel instanceof ISmartItemModel) {
+      iBakedModel = ((ISmartItemModel)wrappedModel).handleItemState(stack);
+    }
+    return this;
   }
 
   @Override
   public VertexFormat getFormat() {
-      if (iBakedModel instanceof IFlexibleBakedModel)
-      {
-          return ((IFlexibleBakedModel)iBakedModel).getFormat();
-      }
-      return Attributes.DEFAULT_BAKED_FORMAT;
+    if (iBakedModel instanceof IFlexibleBakedModel)
+    {
+      return ((IFlexibleBakedModel)iBakedModel).getFormat();
+    }
+    return Attributes.DEFAULT_BAKED_FORMAT;
   }
 
   private final UpdateLink updateLink;
