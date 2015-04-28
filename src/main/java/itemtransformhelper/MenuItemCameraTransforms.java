@@ -47,8 +47,10 @@ public class MenuItemCameraTransforms
   public class KeyPressCallback
   {
     void keyPressed(MenuKeyHandler.ArrowKeys whichKey)
-    {
-      switch (whichKey) {
+      {
+        if (!linkToHUDrenderer.menuVisible) return;
+
+        switch (whichKey) {
         case DOWN: {
           linkToHUDrenderer.selectedField = linkToHUDrenderer.selectedField.getNextField();
           break;
@@ -132,14 +134,28 @@ public class MenuItemCameraTransforms
       case RESTORE_DEFAULT: {
         ItemModelFlexibleCamera.UpdateLink link = StartupClientOnly.modelBakeEventHandler.getItemOverrideLink();
         IBakedModel savedModel = link.itemModelToOverride;
-        link.itemModelToOverride = null;
-        ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
-        link.itemModelToOverride = savedModel;
-        switch (linkToHUDrenderer.selectedTransform) {
-          case THIRD: {copyTransforms(originalTransforms.thirdPerson, transformVec3f); break;}
-          case FIRST: {copyTransforms(originalTransforms.firstPerson, transformVec3f); break;}
-          case GUI: {copyTransforms(originalTransforms.gui, transformVec3f); break;}
-          case HEAD: {copyTransforms(originalTransforms.head, transformVec3f); break;}
+        if (savedModel != null) {  // not sure why this would ever be null, but it was (in a bug report), so just check to make sure.
+          link.itemModelToOverride = null;
+          ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
+          link.itemModelToOverride = savedModel;
+          switch (linkToHUDrenderer.selectedTransform) {
+            case THIRD: {
+              copyTransforms(originalTransforms.thirdPerson, transformVec3f);
+              break;
+            }
+            case FIRST: {
+              copyTransforms(originalTransforms.firstPerson, transformVec3f);
+              break;
+            }
+            case GUI: {
+              copyTransforms(originalTransforms.gui, transformVec3f);
+              break;
+            }
+            case HEAD: {
+              copyTransforms(originalTransforms.head, transformVec3f);
+              break;
+            }
+          }
         }
         break;
       }
