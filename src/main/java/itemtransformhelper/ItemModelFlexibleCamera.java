@@ -73,7 +73,8 @@ public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemM
   @Override
   public IBakedModel handleItemState(ItemStack stack) {
       if (wrappedModel instanceof ISmartItemModel) {
-          iBakedModel = ((ISmartItemModel)wrappedModel).handleItemState(stack);
+        IBakedModel baseModel = ((ISmartItemModel)iBakedModel).handleItemState(stack);
+        return new ItemModelFlexibleCamera(baseModel, updateLink);
       }
       return this;
   }

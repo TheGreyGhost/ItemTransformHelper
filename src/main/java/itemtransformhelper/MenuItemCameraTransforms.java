@@ -47,10 +47,10 @@ public class MenuItemCameraTransforms
   public class KeyPressCallback
   {
     void keyPressed(MenuKeyHandler.ArrowKeys whichKey)
-      {
-        if (!linkToHUDrenderer.menuVisible) return;
+    {
+      if (!linkToHUDrenderer.menuVisible) return;
 
-        switch (whichKey) {
+      switch (whichKey) {
         case DOWN: {
           linkToHUDrenderer.selectedField = linkToHUDrenderer.selectedField.getNextField();
           break;
