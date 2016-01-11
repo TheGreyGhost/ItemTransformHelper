@@ -3,6 +3,7 @@ package itemtransformhelper;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -27,6 +28,8 @@ import java.util.List;
  * Models which don't match itemModelToOverride will use their original transform
  *
  * The wrapper currently understands IFlexibleBakedModel, ISmartItemModel, ISmartBlockModel, and IPerspectiveAwareModel
+ *
+ * NB Starting with Forge 1.8-11.14.4.1563, it appears that all items now implement IPerspectiveAwareModel
  */
 @SuppressWarnings({ "deprecation", "unchecked" })
 public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemModel, ISmartBlockModel
@@ -90,7 +93,7 @@ public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemM
     return (updateLink.itemModelToOverride == this) ? updateLink.forcedTransform : iBakedModel.getItemCameraTransforms();
   }
 
-  private final UpdateLink updateLink;
+  protected final UpdateLink updateLink;
 
   public IBakedModel getIBakedModel() {
     return iBakedModel;
@@ -127,8 +130,45 @@ public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemM
 
     @Override
     public Pair<IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-      IBakedModel baseModel = getIBakedModel();
-      return ((IPerspectiveAwareModel) baseModel).handlePerspective(cameraTransformType);
+      if (updateLink.itemModelToOverride == this) {
+        ItemTransformVec3f itemTransformVec3f;
+        switch (cameraTransformType) {
+            case NONE: {
+                itemTransformVec3f = ItemTransformVec3f.DEFAULT;
+                break;
+            }
+            case FIRST_PERSON: {
+                itemTransformVec3f = updateLink.forcedTransform.firstPerson;
+                break;
+            }
+            case THIRD_PERSON: {
+                itemTransformVec3f = updateLink.forcedTransform.thirdPerson;
+                break;
+            }
+            case GUI: {
+                itemTransformVec3f = updateLink.forcedTransform.gui;
+                break;
+            }
+            case HEAD: {
+                itemTransformVec3f = updateLink.forcedTransform.head;
+                break;
+            }
+            default: {
+             throw new IllegalArgumentException("Unknown cameraTransformType:" + cameraTransformType);
+            }
+        }
+
+        TRSRTransformation tr = new TRSRTransformation(itemTransformVec3f);
+        Matrix4f mat = null;
+        if (tr != null && tr != TRSRTransformation.identity()) {
+            mat = TRSRTransformation.blockCornerToCenter(tr).getMatrix();
+        }
+          return Pair.of((IBakedModel)this, mat);
+
+      } else {
+        IBakedModel baseModel = getIBakedModel();
+        return ((IPerspectiveAwareModel) baseModel).handlePerspective(cameraTransformType);
+      }
     }
   }
 

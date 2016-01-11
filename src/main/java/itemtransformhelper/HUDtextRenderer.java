@@ -137,7 +137,10 @@ public class HUDtextRenderer
     }
 
     public enum TransformName {
-      THIRD, FIRST, HEAD, GUI;
+      THIRD(ItemCameraTransforms.TransformType.THIRD_PERSON),
+        FIRST(ItemCameraTransforms.TransformType.FIRST_PERSON),
+        HEAD(ItemCameraTransforms.TransformType.HEAD),
+        GUI(ItemCameraTransforms.TransformType.GUI);
       public TransformName getNext()
       {
         for (TransformName transformName : TransformName.values()) {
@@ -152,6 +155,14 @@ public class HUDtextRenderer
         }
         return GUI;
       }
+      public ItemCameraTransforms.TransformType getVanillaTransformType() {
+        return vanillaType;
+      }
+
+      TransformName(ItemCameraTransforms.TransformType i_type) {
+        vanillaType = i_type;
+      }
+      private ItemCameraTransforms.TransformType vanillaType;
     }
 
     public enum SelectedField {

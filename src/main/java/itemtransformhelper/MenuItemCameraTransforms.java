@@ -8,12 +8,17 @@ import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.client.model.TRSRTransformation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
+
+import javax.vecmath.Matrix4f;
 
 /**
  * The menu used to select and alter the different parts of the ItemCameraTransform for the currently selected item.
@@ -136,26 +141,19 @@ public class MenuItemCameraTransforms
         IBakedModel savedModel = link.itemModelToOverride;
         if (savedModel != null) {  // not sure why this would ever be null, but it was (in a bug report), so just check to make sure.
           link.itemModelToOverride = null;
-          ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
-          link.itemModelToOverride = savedModel;
-          switch (linkToHUDrenderer.selectedTransform) {
-            case THIRD: {
-              copyTransforms(originalTransforms.thirdPerson, transformVec3f);
-              break;
-            }
-            case FIRST: {
-              copyTransforms(originalTransforms.firstPerson, transformVec3f);
-              break;
-            }
-            case GUI: {
-              copyTransforms(originalTransforms.gui, transformVec3f);
-              break;
-            }
-            case HEAD: {
-              copyTransforms(originalTransforms.head, transformVec3f);
-              break;
-            }
+          if (savedModel instanceof IPerspectiveAwareModel) {  // IPerspectiveAware just have identity matrix for getItemCameraTransforms
+            IPerspectiveAwareModel savedModelPA = (IPerspectiveAwareModel)savedModel;
+            ItemCameraTransforms.TransformType currentType = linkToHUDrenderer.selectedTransform.getVanillaTransformType();
+            Pair<IBakedModel, Matrix4f> modelAndMatrix = savedModelPA.handlePerspective(currentType);
+            TRSRTransformation tr = new TRSRTransformation(modelAndMatrix.getRight());
+            tr = TRSRTransformation.blockCenterToCorner(tr);
+            ItemTransformVec3f newTransform = tr.toItemTransform();
+            copyTransforms(newTransform, transformVec3f);
+          } else { // not IPerspectiveAwareModel
+            ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
+            copyNonPerspectiveAware(originalTransforms, transformVec3f, linkToHUDrenderer.selectedTransform);
           }
+          link.itemModelToOverride = savedModel;
         }
         break;
       }
@@ -211,6 +209,31 @@ public class MenuItemCameraTransforms
     to.scale.setZ(from.scale.getZ());
     to.rotation.setZ(from.rotation.getZ());
   }
+
+  private void copyNonPerspectiveAware(ItemCameraTransforms copyFrom,
+                                       ItemTransformVec3f copyTo,
+                                       HUDtextRenderer.HUDinfoUpdateLink.TransformName whichViewSelected)
+  {
+      switch (whichViewSelected) {
+          case THIRD: {
+              copyTransforms(copyFrom.thirdPerson, copyTo);
+              break;
+          }
+          case FIRST: {
+              copyTransforms(copyFrom.firstPerson, copyTo);
+              break;
+          }
+          case GUI: {
+              copyTransforms(copyFrom.gui, copyTo);
+              break;
+          }
+          case HEAD: {
+              copyTransforms(copyFrom.head, copyTo);
+              break;
+          }
+      }
+  }
+
 
   private HUDtextRenderer.HUDinfoUpdateLink linkToHUDrenderer;
   private MenuKeyHandler menuKeyHandler;

@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 /**
  * User: The Grey Ghost
  * Date: 2/11/13
- * Every tick, check all the items in the hotbar to see if any are the mbe14 ItemCamera.  If so, apply the transform
+ * Every tick, check all the items in the hotbar to see if any are the camera  If so, apply the transform
  *   override to the held item.
  */
 @SuppressWarnings("deprecation")
