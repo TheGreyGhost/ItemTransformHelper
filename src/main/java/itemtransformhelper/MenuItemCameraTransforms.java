@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.TRSRTransformation;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 /**
  * The menu used to select and alter the different parts of the ItemCameraTransform for the currently selected item.
@@ -145,9 +147,9 @@ public class MenuItemCameraTransforms
             IPerspectiveAwareModel savedModelPA = (IPerspectiveAwareModel)savedModel;
             ItemCameraTransforms.TransformType currentType = linkToHUDrenderer.selectedTransform.getVanillaTransformType();
             Pair<IBakedModel, Matrix4f> modelAndMatrix = savedModelPA.handlePerspective(currentType);
-            TRSRTransformation tr = new TRSRTransformation(modelAndMatrix.getRight());
-            tr = TRSRTransformation.blockCenterToCorner(tr);
-            ItemTransformVec3f newTransform = tr.toItemTransform();
+            TRSRTransformationBugFix tr = new TRSRTransformationBugFix(modelAndMatrix.getRight());
+            TRSRTransformationBugFix.TranslationRotationScale trs = tr.toItemTransform();
+            ItemTransformVec3f newTransform = new ItemTransformVec3f(trs.rotation, trs.translation, trs.scale);
             copyTransforms(newTransform, transformVec3f);
           } else { // not IPerspectiveAwareModel
             ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
@@ -158,7 +160,38 @@ public class MenuItemCameraTransforms
         break;
       }
       case PRINT: {
-        StringBuilder output = new StringBuilder();
+          //todo remove: debug code - add breakpoint here...
+
+////          ItemTransformVec3f testITV3f;
+////
+////          testITV3f = transformVec3f;
+////          TRSRTransformation trTest = new TRSRTransformation(testITV3f);
+////          ItemTransformVec3f backCalc = trTest.toItemTransform();
+////          System.out.format("A initial: rot %s; trans %s; scale %s\n",
+////                            testITV3f.rotation.toString(), testITV3f.translation.toString(), testITV3f.scale.toString());
+////          System.out.format("A final: rot %s; trans %s; scale %s\n",
+////                  backCalc.rotation.toString(), backCalc.translation.toString(), backCalc.scale.toString());
+//
+//          Vector3f rotation = new Vector3f(0, 0, 0);
+//          Vector3f scale = new Vector3f(1, 1, 1);
+//          Vector3f translation = new Vector3f(0, 0, 0);
+//          ItemTransformVec3f testITV3f = new ItemTransformVec3f(rotation, translation, scale);
+//          TRSRTransformationBugFix.TranslationRotationScale trs = new TRSRTransformationBugFix.TranslationRotationScale();
+//          trs.rotation = testITV3f.rotation;
+//          trs.scale = testITV3f.scale;
+//          trs.translation = testITV3f.translation;
+//
+//          TRSRTransformationBugFix trTest = new TRSRTransformationBugFix(trs);
+//          TRSRTransformationBugFix.TranslationRotationScale backCalc = trTest.toItemTransform();
+//          System.out.format("initial: rot %s; trans %s; scale %s\n",
+//                  testITV3f.rotation.toString(), testITV3f.translation.toString(), testITV3f.scale.toString());
+//          System.out.format("final: rot %s; trans %s; scale %s\n",
+//                  backCalc.rotation.toString(), backCalc.translation.toString(), backCalc.scale.toString());
+
+
+
+          // todo: uncomment
+          StringBuilder output = new StringBuilder();
         output.append("\n\"display\": {\n");
         printTransform(output, "thirdperson", linkToHUDrenderer.itemCameraTransforms.thirdPerson);
         output.append(",\n");
