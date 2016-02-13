@@ -160,38 +160,7 @@ public class MenuItemCameraTransforms
         break;
       }
       case PRINT: {
-          //todo remove: debug code - add breakpoint here...
-
-////          ItemTransformVec3f testITV3f;
-////
-////          testITV3f = transformVec3f;
-////          TRSRTransformation trTest = new TRSRTransformation(testITV3f);
-////          ItemTransformVec3f backCalc = trTest.toItemTransform();
-////          System.out.format("A initial: rot %s; trans %s; scale %s\n",
-////                            testITV3f.rotation.toString(), testITV3f.translation.toString(), testITV3f.scale.toString());
-////          System.out.format("A final: rot %s; trans %s; scale %s\n",
-////                  backCalc.rotation.toString(), backCalc.translation.toString(), backCalc.scale.toString());
-//
-//          Vector3f rotation = new Vector3f(0, 0, 0);
-//          Vector3f scale = new Vector3f(1, 1, 1);
-//          Vector3f translation = new Vector3f(0, 0, 0);
-//          ItemTransformVec3f testITV3f = new ItemTransformVec3f(rotation, translation, scale);
-//          TRSRTransformationBugFix.TranslationRotationScale trs = new TRSRTransformationBugFix.TranslationRotationScale();
-//          trs.rotation = testITV3f.rotation;
-//          trs.scale = testITV3f.scale;
-//          trs.translation = testITV3f.translation;
-//
-//          TRSRTransformationBugFix trTest = new TRSRTransformationBugFix(trs);
-//          TRSRTransformationBugFix.TranslationRotationScale backCalc = trTest.toItemTransform();
-//          System.out.format("initial: rot %s; trans %s; scale %s\n",
-//                  testITV3f.rotation.toString(), testITV3f.translation.toString(), testITV3f.scale.toString());
-//          System.out.format("final: rot %s; trans %s; scale %s\n",
-//                  backCalc.rotation.toString(), backCalc.translation.toString(), backCalc.scale.toString());
-
-
-
-          // todo: uncomment
-          StringBuilder output = new StringBuilder();
+        StringBuilder output = new StringBuilder();
         output.append("\n\"display\": {\n");
         printTransform(output, "thirdperson", linkToHUDrenderer.itemCameraTransforms.thirdPerson);
         output.append(",\n");

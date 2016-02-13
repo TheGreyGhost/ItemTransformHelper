@@ -250,7 +250,6 @@ public class TRSRTransformationBugFix implements ITransformation
         b.set(m);
         b.mul(t);
 
-        // FIXME: this doesn't work correctly for some reason; not crucial, so disabling for now; investigate in the future.
         //sortSingularValues(b, v);
 
         Pair<Float, Float> p;
@@ -534,7 +533,6 @@ public class TRSRTransformationBugFix implements ITransformation
 
     public int rotate(EnumFacing facing, int vertexIndex)
     {
-        // FIXME check if this is good enough
         return vertexIndex;
     }
 
