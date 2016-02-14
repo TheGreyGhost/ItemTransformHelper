@@ -68,6 +68,17 @@ public class TRSRTransformationBugFix implements ITransformation
         public Vector3f translation;
         public Vector3f scale;
         public Vector3f rotation;
+
+        public org.lwjgl.util.vector.Vector3f translationLWJGL() {
+          return new org.lwjgl.util.vector.Vector3f(translation.x, translation.y, translation.z);
+        }
+        public org.lwjgl.util.vector.Vector3f scaleLWJGL() {
+          return new org.lwjgl.util.vector.Vector3f(scale.x, scale.y, scale.z);
+        }
+        public org.lwjgl.util.vector.Vector3f rotationLWJGL() {
+          return new org.lwjgl.util.vector.Vector3f(rotation.x, rotation.y, rotation.z);
+        }
+
     }
 
     /*

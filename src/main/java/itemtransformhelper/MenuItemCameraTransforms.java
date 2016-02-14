@@ -8,9 +8,8 @@ import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
-import net.minecraftforge.client.model.TRSRTransformation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -20,7 +19,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
 /**
  * The menu used to select and alter the different parts of the ItemCameraTransform for the currently selected item.
@@ -41,13 +39,13 @@ public class MenuItemCameraTransforms
 
   /**
    * get the current ItemCameraTransforms
-   * @return
+   * @return the transform
    */
   public ItemCameraTransforms getItemCameraTransforms() {return linkToHUDrenderer.itemCameraTransforms;}
 
   /**
    * turn menu on or off
-   * @param visible
+   * @param visible true = make visible
    */
   public void changeMenuVisible(boolean visible) {linkToHUDrenderer.menuVisible = visible;}
 
@@ -84,6 +82,8 @@ public class MenuItemCameraTransforms
       case FIRST: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.firstPerson; break;}
       case GUI: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.gui; break;}
       case HEAD: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.head; break;}
+      case FIXED: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.fixed; break;}
+      case GROUND: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.ground; break;}
     }
     if (transformVec3f == null) return; // should never happen
 
@@ -146,10 +146,10 @@ public class MenuItemCameraTransforms
           if (savedModel instanceof IPerspectiveAwareModel) {  // IPerspectiveAware just have identity matrix for getItemCameraTransforms
             IPerspectiveAwareModel savedModelPA = (IPerspectiveAwareModel)savedModel;
             ItemCameraTransforms.TransformType currentType = linkToHUDrenderer.selectedTransform.getVanillaTransformType();
-            Pair<IBakedModel, Matrix4f> modelAndMatrix = savedModelPA.handlePerspective(currentType);
+            Pair<? extends IFlexibleBakedModel, Matrix4f> modelAndMatrix = savedModelPA.handlePerspective(currentType);
             TRSRTransformationBugFix tr = new TRSRTransformationBugFix(modelAndMatrix.getRight());
             TRSRTransformationBugFix.TranslationRotationScale trs = tr.toItemTransform();
-            ItemTransformVec3f newTransform = new ItemTransformVec3f(trs.rotation, trs.translation, trs.scale);
+            ItemTransformVec3f newTransform = new ItemTransformVec3f(trs.rotationLWJGL(), trs.translationLWJGL(), trs.scaleLWJGL());
             copyTransforms(newTransform, transformVec3f);
           } else { // not IPerspectiveAwareModel
             ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
@@ -169,6 +169,10 @@ public class MenuItemCameraTransforms
         printTransform(output, "gui", linkToHUDrenderer.itemCameraTransforms.gui);
         output.append(",\n");
         printTransform(output, "head", linkToHUDrenderer.itemCameraTransforms.head);
+        output.append("\n");
+        printTransform(output, "fixed", linkToHUDrenderer.itemCameraTransforms.fixed);
+        output.append("\n");
+        printTransform(output, "ground", linkToHUDrenderer.itemCameraTransforms.ground);
         output.append("\n}");
         System.out.println(output);
         ChatComponentText text = new ChatComponentText("                   \"display\" JSON section printed to console...");
@@ -232,6 +236,14 @@ public class MenuItemCameraTransforms
           case HEAD: {
               copyTransforms(copyFrom.head, copyTo);
               break;
+          }
+          case FIXED: {
+            copyTransforms(copyFrom.fixed, copyTo);
+            break;
+          }
+          case GROUND: {
+            copyTransforms(copyFrom.ground, copyTo);
+            break;
           }
       }
   }

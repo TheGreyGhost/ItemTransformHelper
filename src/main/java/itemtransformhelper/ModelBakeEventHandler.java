@@ -3,6 +3,7 @@ package itemtransformhelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.IRegistry;
 import net.minecraft.util.RegistrySimple;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -24,21 +25,22 @@ public class ModelBakeEventHandler
   public ModelBakeEventHandler()
   {
     itemOverrideLink.forcedTransform = new ItemCameraTransforms(ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT,
+                                                                ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT,
                                                                 ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
   }
 
   @SubscribeEvent
   public void modelBakeEvent(ModelBakeEvent event)
   {
-    IRegistry modelRegistry = event.modelRegistry;
+    IRegistry<ModelResourceLocation, IBakedModel> modelRegistry = event.modelRegistry;
     if (!(modelRegistry instanceof RegistrySimple)) {
       System.err.println("ModelBakeEventHandler::modelBakeEvent expected modelRegistry to be RegistrySimple, was actually:"+modelRegistry);
       return;
     }
-    RegistrySimple modelSimpleRegistry = (RegistrySimple)modelRegistry;
+    RegistrySimple<ModelResourceLocation, IBakedModel> modelSimpleRegistry = (RegistrySimple)modelRegistry;
 
-    for (Object modelKey : modelSimpleRegistry.getKeys()) {
-      IBakedModel iBakedModel = (IBakedModel)event.modelRegistry.getObject(modelKey);
+    for (ModelResourceLocation modelKey : modelSimpleRegistry.getKeys()) {
+      IBakedModel iBakedModel = event.modelRegistry.getObject(modelKey);
       ItemModelFlexibleCamera wrappedModel = ItemModelFlexibleCamera.getWrappedModel(iBakedModel, itemOverrideLink);
       event.modelRegistry.putObject(modelKey, wrappedModel);
     }

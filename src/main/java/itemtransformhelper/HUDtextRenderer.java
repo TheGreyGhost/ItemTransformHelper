@@ -2,8 +2,6 @@ package itemtransformhelper;
 
 import java.util.ArrayList;
 
-import javax.vecmath.Vector3f;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,8 +9,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * User: The Grey Ghost
@@ -55,6 +56,11 @@ public class HUDtextRenderer
       case FIRST: {displayText.add("first"); transformVec3f = huDinfoUpdateLink.itemCameraTransforms.firstPerson; break;}
       case GUI: {displayText.add("gui"); transformVec3f = huDinfoUpdateLink.itemCameraTransforms.gui; break;}
       case HEAD: {displayText.add("head"); transformVec3f = huDinfoUpdateLink.itemCameraTransforms.head; break;}
+      case FIXED: {displayText.add("fixed"); transformVec3f = huDinfoUpdateLink.itemCameraTransforms.fixed; break;}
+      case GROUND: {displayText.add("grnd"); transformVec3f = huDinfoUpdateLink.itemCameraTransforms.ground; break;}
+      default: {
+        throw new IllegalArgumentException("Unknown cameraTransformType:" + huDinfoUpdateLink.selectedTransform);
+      }
     }
     selectableField.add(HUDinfoUpdateLink.SelectedField.TRANSFORM);
 
@@ -130,7 +136,9 @@ public class HUDtextRenderer
       ItemTransformVec3f vec2 = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
       ItemTransformVec3f vec3 = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
       ItemTransformVec3f vec4 = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
-      itemCameraTransforms = new ItemCameraTransforms(vec1, vec2, vec3, vec4);
+      ItemTransformVec3f vec5 = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
+      ItemTransformVec3f vec6 = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
+      itemCameraTransforms = new ItemCameraTransforms(vec1, vec2, vec3, vec4, vec5, vec6);
       selectedField = SelectedField.TRANSFORM;
       selectedTransform = TransformName.FIRST;
       menuVisible = false;
@@ -140,7 +148,10 @@ public class HUDtextRenderer
       THIRD(ItemCameraTransforms.TransformType.THIRD_PERSON),
         FIRST(ItemCameraTransforms.TransformType.FIRST_PERSON),
         HEAD(ItemCameraTransforms.TransformType.HEAD),
-        GUI(ItemCameraTransforms.TransformType.GUI);
+        GUI(ItemCameraTransforms.TransformType.GUI),
+        GROUND(ItemCameraTransforms.TransformType.GROUND),
+        FIXED(ItemCameraTransforms.TransformType.FIXED);
+
       public TransformName getNext()
       {
         for (TransformName transformName : TransformName.values()) {
@@ -153,7 +164,7 @@ public class HUDtextRenderer
         for (TransformName transformName : TransformName.values()) {
           if (transformName.ordinal() == this.ordinal() - 1) return transformName;
         }
-        return GUI;
+        return FIXED;
       }
       public ItemCameraTransforms.TransformType getVanillaTransformType() {
         return vanillaType;
@@ -228,11 +239,12 @@ public class HUDtextRenderer
     GlStateManager.disableTexture2D();
     GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
     GlStateManager.color(f, f1, f2, f3);
-    worldrenderer.startDrawingQuads();
-    worldrenderer.addVertex((double)left, (double)bottom, 0.0D);
-    worldrenderer.addVertex((double)right, (double)bottom, 0.0D);
-    worldrenderer.addVertex((double)right, (double)top, 0.0D);
-    worldrenderer.addVertex((double)left, (double)top, 0.0D);
+
+    worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+    worldrenderer.pos((double)left, (double)bottom, 0.0D).endVertex();
+    worldrenderer.pos((double) right, (double) bottom, 0.0D).endVertex();
+    worldrenderer.pos((double) right, (double) top, 0.0D).endVertex();
+    worldrenderer.pos((double) left, (double) top, 0.0D).endVertex();
     tessellator.draw();
     GlStateManager.enableTexture2D();
     GlStateManager.disableBlend();

@@ -3,7 +3,6 @@ package itemtransformhelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * User: The Grey Ghost
@@ -27,7 +26,7 @@ public class StartupClientOnly
   public static void preInitClientOnly()
   {
     MinecraftForge.EVENT_BUS.register(modelBakeEventHandler);
-    FMLCommonHandler.instance().bus().register(clientTickHandler);
+    MinecraftForge.EVENT_BUS.register(clientTickHandler);
   }
 
   public static void initClientOnly()

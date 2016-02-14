@@ -84,8 +84,8 @@ public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemM
   }
 
   @Override
-  public TextureAtlasSprite getTexture() {
-    return iBakedModel.getTexture();
+  public TextureAtlasSprite getParticleTexture() {
+    return iBakedModel.getParticleTexture();
   }
 
   @Override
@@ -129,7 +129,7 @@ public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemM
     }
 
     @Override
-    public Pair<IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+    public Pair<? extends IFlexibleBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
       if (updateLink.itemModelToOverride == this) {
         ItemTransformVec3f itemTransformVec3f;
         switch (cameraTransformType) {
@@ -153,6 +153,15 @@ public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemM
                 itemTransformVec3f = updateLink.forcedTransform.head;
                 break;
             }
+            case GROUND: {
+              itemTransformVec3f = updateLink.forcedTransform.ground;
+              break;
+            }
+            case FIXED: {
+              itemTransformVec3f = updateLink.forcedTransform.fixed;
+              break;
+            }
+
             default: {
              throw new IllegalArgumentException("Unknown cameraTransformType:" + cameraTransformType);
             }
@@ -163,7 +172,7 @@ public class ItemModelFlexibleCamera implements IFlexibleBakedModel, ISmartItemM
         if (tr != null && tr != TRSRTransformation.identity()) {
             mat = TRSRTransformation.blockCornerToCenter(tr).getMatrix();
         }
-          return Pair.of((IBakedModel)this, mat);
+        return Pair.of(this, mat);
 
       } else {
         IBakedModel baseModel = getIBakedModel();
