@@ -25,4 +25,8 @@ For background information on
 - This link describes the structure of the JSON Item Model file (see the Item Models section halfway down):
    http://minecraft.gamepedia.com/Block_models
 
+IPerspectiveAwareModel
+                builder.put(type, TRSRTransformation.blockCenterToCorner(new TRSRTransformation(transforms.getTransform(type))));
+ForgeHooksClient
+        return Optional.of(TRSRTransformation.blockCenterToCorner(new TRSRTransformation(transform)));
 

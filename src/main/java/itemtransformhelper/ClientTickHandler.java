@@ -2,9 +2,10 @@ package itemtransformhelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -39,7 +40,10 @@ public class ClientTickHandler
 
     IBakedModel ibakedmodel = null;
     if (foundCamera) {
-      ItemStack heldItemStack = player.getHeldItem();
+      ItemStack heldItemStack = player.getHeldItem(EnumHand.MAIN_HAND);
+      if (heldItemStack == null) {
+        heldItemStack = player.getHeldItem(EnumHand.OFF_HAND);
+      }
       if (heldItemStack != null) {
         ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(heldItemStack);
       }
