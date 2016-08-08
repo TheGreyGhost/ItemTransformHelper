@@ -202,17 +202,23 @@ public class MenuItemCameraTransforms
             ItemTransformVec3f itemTransform7rev = TRSRTransformationBugFix.toItemTransform(tr7);
 
 
-            for (int a = -1; a <= 1; ++a) {
-              for (int b = -1; b <= 1; ++b) {
-                for (int c = -1; c <= 1; ++c) {
-                  itemTransform7.rotation.set(a * 30, b * 45, c * 90);
+            for (int a = -9; a <= 9; ++a) {
+              for (int b = -9; b <= 9; ++b) {
+                for (int c = -9; c <= 9; ++c) {
+                  itemTransform7.rotation.set(a * 10, b * 10, c * 10);
                   itemTransform7.translation.set(0.0F, 0.0F, 0.0F);
                   itemTransform7.scale.set(1.0F, 1.0F, 1.0F);
                   tr7 = new TRSRTransformation(itemTransform7);
                   itemTransform7rev = TRSRTransformationBugFix.toItemTransform(tr7);
-                  System.out.format("[%f, %f, %f] -> [%f, %f, %f]\n",
-                                    itemTransform7.rotation.x, itemTransform7.rotation.y, itemTransform7.rotation.z,
-                                    itemTransform7rev.rotation.x, itemTransform7rev.rotation.y, itemTransform7rev.rotation.z);
+                  if (0.1 <= Math.abs(itemTransform7.rotation.x - itemTransform7rev.rotation.x)
+                             + Math.abs(itemTransform7.rotation.y - itemTransform7rev.rotation.y)
+                          + Math.abs(itemTransform7.rotation.z - itemTransform7rev.rotation.z)
+                          ) {
+                    System.out.format("[%f, %f, %f] -> [%f, %f, %f]\n",
+                                      itemTransform7.rotation.x, itemTransform7.rotation.y, itemTransform7.rotation.z,
+                                      itemTransform7rev.rotation.x, itemTransform7rev.rotation.y,
+                                      itemTransform7rev.rotation.z);
+                  }
                 }
               }
             }

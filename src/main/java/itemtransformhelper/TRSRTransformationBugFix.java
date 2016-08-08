@@ -40,20 +40,20 @@ public final class TRSRTransformationBugFix
     float y2 = q.y * q.y;
     float z2 = q.z * q.z;
     float l = w2 + x2 + y2 + z2;
-    float sy = 2 * q.w * q.y - 2 * q.x * q.z; //bugfix, formerly 2 * q.w * q.x - 2 * q.y * q.z
-    float y = (float)Math.asin(sy / l);
-    if(Math.abs(sy) > .999f * l)
+    float siny = 2 * q.x * q.z + 2 * q.y * q.w;
+    float y = (float)Math.asin(siny / l);
+    if(Math.abs(siny) > .999f * l)
     {
       return new Vector3f(
-              2 * (float)Math.atan2(q.x, q.w),
+              2 * (float)Math.atan2(q.x, q.w), //todo work this out
               y,
               0
       );
     }
     return new Vector3f(
-            (float)Math.atan2(2 * q.y * q.z + 2 * q.x * q.w, w2 - x2 - y2 + z2),
+            (float)Math.atan2(2 * q.x * q.w - 2 * q.z * q.y, (w2 - y2) - (x2 - z2)),
             y,
-            (float)Math.atan2(2 * q.x * q.y + 2 * q.w * q.z, w2 + x2 - y2 - z2)
+            (float)Math.atan2(2 * q.z * q.w - 2 * q.x * q.y, (w2 - y2) + (x2 - z2))
     );
   }
 }
