@@ -45,7 +45,7 @@ public final class TRSRTransformationBugFix
     if(Math.abs(siny) > .999f * l)
     {
       return new Vector3f(
-              2 * (float)Math.atan2(q.x, q.w), //todo work this out
+              2 * (float)Math.atan2(q.x, q.w),
               y,
               0
       );

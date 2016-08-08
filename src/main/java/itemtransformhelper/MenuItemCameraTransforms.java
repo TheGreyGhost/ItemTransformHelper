@@ -148,88 +148,13 @@ public class MenuItemCameraTransforms
         if (savedModel != null) {  // not sure why this would ever be null, but it was (in a bug report), so just check to make sure.
           link.itemModelToOverride = null;
           if (savedModel instanceof IPerspectiveAwareModel) {  // IPerspectiveAware just have identity matrix for getItemCameraTransforms
+                                                               // --> need to back-calculate from the transform matrix
             IPerspectiveAwareModel savedModelPA = (IPerspectiveAwareModel)savedModel;
             ItemCameraTransforms.TransformType currentType = linkToHUDrenderer.selectedTransform.getVanillaTransformType();
             Pair<? extends IBakedModel, Matrix4f> modelAndMatrix = savedModelPA.handlePerspective(currentType);
             TRSRTransformation tr = new TRSRTransformation(modelAndMatrix.getRight());
-//            TRSRTransformation.TranslationRotationScale trs = tr.toItemTransform();
-//            ItemTransformVec3f newTransform = new ItemTransformVec3f(trs.rotationLWJGL(), trs.translationLWJGL(), trs.scaleLWJGL());
-//            ItemTransformVec3f newTransform = new ItemTransformVec3f(trs.rotationLWJGL(), trs.translationLWJGL(), trs.scaleLWJGL());
-//            TRSRTransformation newTransformation = tr.blockCornerToCenter(tr);
             ItemTransformVec3f newItemTransform = TRSRTransformationBugFix.toItemTransform(tr);
-
             copyTransforms(newItemTransform, transformVec3f);
-
-            TRSRTransformation tr1 = TRSRTransformation.blockCenterToCorner(tr); //todo remove debugs
-            ItemTransformVec3f newItemTransform1 = tr1.toItemTransform();
-
-            TRSRTransformation tr2 = TRSRTransformation.blockCornerToCenter(tr);
-            ItemTransformVec3f newItemTransform2 = tr2.toItemTransform();
-
-            ItemTransformVec3f itemTransform3 = tr2.toItemTransform();
-            itemTransform3.rotation.set(75.0F, 45.0F, 0.0F);
-            itemTransform3.translation.set(0.0F, 0.15625F, 0.0F);
-            itemTransform3.scale.set(0.375F, 0.375F, 0.375F);
-            TRSRTransformation tr3 = new TRSRTransformation(itemTransform3);
-            ItemTransformVec3f itemTransform3rev = TRSRTransformationBugFix.toItemTransform(tr3);
-
-            ItemTransformVec3f itemTransform4 = tr2.toItemTransform();
-            itemTransform4.rotation.set(75.0F, 45.0F, 0.0F);
-            itemTransform4.translation.set(0.0F, 0.0F, 0.0F);
-            itemTransform4.scale.set(1.0F, 1.0F, 1.0F);
-            TRSRTransformation tr4 = new TRSRTransformation(itemTransform4);
-            ItemTransformVec3f itemTransform4rev = TRSRTransformationBugFix.toItemTransform(tr4);
-
-            ItemTransformVec3f itemTransform5 = tr2.toItemTransform();
-            itemTransform5.rotation.set(1.0F, 0.0F, 0.0F);
-            itemTransform5.translation.set(0.0F, 0.0F, 0.0F);
-            itemTransform5.scale.set(1.0F, 1.0F, 1.0F);
-            TRSRTransformation tr5 = new TRSRTransformation(itemTransform5);
-            ItemTransformVec3f itemTransform5rev = TRSRTransformationBugFix.toItemTransform(tr5);
-
-            ItemTransformVec3f itemTransform6 = tr2.toItemTransform();
-            itemTransform6.rotation.set(0.0F, 1.0F, 0.0F);
-            itemTransform6.translation.set(0.0F, 0.0F, 0.0F);
-            itemTransform6.scale.set(1.0F, 1.0F, 1.0F);
-            TRSRTransformation tr6 = new TRSRTransformation(itemTransform6);
-            ItemTransformVec3f itemTransform6rev = TRSRTransformationBugFix.toItemTransform(tr6);
-
-            ItemTransformVec3f itemTransform7 = tr2.toItemTransform();
-            itemTransform7.rotation.set(0.0F, 0.0F, 1.0F);
-            itemTransform7.translation.set(0.0F, 0.0F, 0.0F);
-            itemTransform7.scale.set(1.0F, 1.0F, 1.0F);
-            TRSRTransformation tr7 = new TRSRTransformation(itemTransform7);
-            ItemTransformVec3f itemTransform7rev = TRSRTransformationBugFix.toItemTransform(tr7);
-
-
-            for (int a = -9; a <= 9; ++a) {
-              for (int b = -9; b <= 9; ++b) {
-                for (int c = -9; c <= 9; ++c) {
-                  itemTransform7.rotation.set(a * 10, b * 10, c * 10);
-                  itemTransform7.translation.set(0.0F, 0.0F, 0.0F);
-                  itemTransform7.scale.set(1.0F, 1.0F, 1.0F);
-                  tr7 = new TRSRTransformation(itemTransform7);
-                  itemTransform7rev = TRSRTransformationBugFix.toItemTransform(tr7);
-                  if (0.1 <= Math.abs(itemTransform7.rotation.x - itemTransform7rev.rotation.x)
-                             + Math.abs(itemTransform7.rotation.y - itemTransform7rev.rotation.y)
-                          + Math.abs(itemTransform7.rotation.z - itemTransform7rev.rotation.z)
-                          ) {
-                    System.out.format("[%f, %f, %f] -> [%f, %f, %f]\n",
-                                      itemTransform7.rotation.x, itemTransform7.rotation.y, itemTransform7.rotation.z,
-                                      itemTransform7rev.rotation.x, itemTransform7rev.rotation.y,
-                                      itemTransform7rev.rotation.z);
-                  }
-                }
-              }
-            }
-
-
-
-
-
-
-
-
           } else { // not IPerspectiveAwareModel
             ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
             copyNonPerspectiveAware(originalTransforms, transformVec3f, linkToHUDrenderer.selectedTransform);
@@ -252,9 +177,9 @@ public class MenuItemCameraTransforms
         printTransform(output, "gui", linkToHUDrenderer.itemCameraTransforms.gui);
         output.append(",\n");
         printTransform(output, "head", linkToHUDrenderer.itemCameraTransforms.head);
-        output.append("\n");
+        output.append(",\n");
         printTransform(output, "fixed", linkToHUDrenderer.itemCameraTransforms.fixed);
-        output.append("\n");
+        output.append(",\n");
         printTransform(output, "ground", linkToHUDrenderer.itemCameraTransforms.ground);
         output.append("\n}");
         System.out.println(output);

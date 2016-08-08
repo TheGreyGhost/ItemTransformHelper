@@ -168,15 +168,9 @@ public class ItemModelFlexibleCamera implements IBakedModel
           }
         }
 
-//        //todo debugging
-//        itemTransformVec3f.rotation.set(75.0F, 45.0F, 0.0F);
-//        itemTransformVec3f.translation.set(0.0F, 0.15625F, 0.0F);
-//        itemTransformVec3f.scale.set(0.375F, 0.375F, 0.375F);
-
         TRSRTransformation tr = new TRSRTransformation(itemTransformVec3f);
         Matrix4f mat = null;
         if (tr != null) { // && tr != TRSRTransformation.identity()) {
-//            mat = TRSRTransformation.blockCenterToCorner(tr).getMatrix();  //todo check this was changed correctly
           mat = tr.getMatrix();
         }
         // The TRSRTransformation for vanilla items have blockCenterToCorner() applied, however handlePerspective
