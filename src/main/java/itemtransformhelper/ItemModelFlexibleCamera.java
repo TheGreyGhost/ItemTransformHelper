@@ -25,13 +25,36 @@ import java.util.List;
  *   b) forcedTransform is the transform to apply
  * Models which don't match itemModelToOverride will use their original transform
  *
- * The wrapper currently understands IFlexibleBakedModel, ISmartItemModel, ISmartBlockModel, and IPerspectiveAwareModel
+ * The wrapper currently understands IPerspectiveAwareModel
+ * It can't be used for Forge Universal Buckets (BakedDynBucket) because of an unsafe cast in the forge code and because
+ *    BakedDynBucket is a final class and private as well.
  *
  * NB Starting with Forge 1.8-11.14.4.1563, it appears that all items now implement IPerspectiveAwareModel
  */
 @SuppressWarnings({ "deprecation", "unchecked" })
 public class ItemModelFlexibleCamera implements IBakedModel
 {
+  /**
+   * Can this model be wrapped in an ItemModelFlexibleCamera?  (eg BakedDynBucket currently can't).
+   * @param modelToWrap
+   * @return true if this model can be safely wrapped
+   */
+  public static boolean canBeWrapped(IBakedModel modelToWrap)
+  {
+    if (bakedDynBucketClazz == null) { // lazy initialisation
+      try {
+        bakedDynBucketClazz = Class.forName("net.minecraftforge.client.model.ModelDynBucket$BakedDynBucket");
+      } catch (ClassNotFoundException cnfe) {
+        System.err.println("Couldn't initialise bakedDynBucketClazz:" + cnfe);
+        bakedDynBucketClazz = ItemTransformHelper.class; // arbitrary class to stop error message more than once
+      }
+    }
+    if (bakedDynBucketClazz.isInstance(modelToWrap)) {
+     return false; // breakpoint here
+    }
+    return true;
+  }
+
   public static ItemModelFlexibleCamera getWrappedModel(IBakedModel modelToWrap, UpdateLink linkToCurrentInformation)
   {
     if (modelToWrap instanceof IPerspectiveAwareModel) {
@@ -40,6 +63,8 @@ public class ItemModelFlexibleCamera implements IBakedModel
       return new ItemModelFlexibleCamera(modelToWrap, linkToCurrentInformation);
     }
   }
+
+  private static Class<?> bakedDynBucketClazz = null;  // lazy initialisation in canBeWrapped()
 
   private ItemModelFlexibleCamera(IBakedModel i_modelToWrap, UpdateLink linkToCurrentInformation)
   {

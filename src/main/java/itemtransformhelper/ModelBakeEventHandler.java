@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.registry.RegistrySimple;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.ModelDynBucket;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Level;
@@ -42,8 +43,10 @@ public class ModelBakeEventHandler
 
     for (ModelResourceLocation modelKey : modelSimpleRegistry.getKeys()) {
       IBakedModel iBakedModel = event.getModelRegistry().getObject(modelKey);
-      ItemModelFlexibleCamera wrappedModel = ItemModelFlexibleCamera.getWrappedModel(iBakedModel, itemOverrideLink);
-      event.getModelRegistry().putObject(modelKey, wrappedModel);
+      if (ItemModelFlexibleCamera.canBeWrapped(iBakedModel)) {
+        ItemModelFlexibleCamera wrappedModel = ItemModelFlexibleCamera.getWrappedModel(iBakedModel, itemOverrideLink);
+        event.getModelRegistry().putObject(modelKey, wrappedModel);
+      }
     }
     FMLLog.log("ItemTransformHelper", Level.INFO, "Warning - The Item Transform Helper replaces your IBakedModels with a wrapped version, this");
     FMLLog.log("ItemTransformHelper", Level.INFO, "  is done even when the helper is not in your hotbar, and might cause problems if your");
