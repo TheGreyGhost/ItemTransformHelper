@@ -3,7 +3,7 @@
   "modid": "itemtransformhelper",
   "name": "Item Transform Helper",
   "description": "Interactively change the position, scale, and rotation of an item",
-  "version": "1.10.2b",
+  "version": "1.9.4a",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
