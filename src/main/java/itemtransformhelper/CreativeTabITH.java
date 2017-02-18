@@ -2,6 +2,7 @@ package itemtransformhelper;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -16,7 +17,7 @@ public class CreativeTabITH extends CreativeTabs
   }
 
   @SideOnly(Side.CLIENT)
-  public Item getTabIconItem() {
-    return StartupCommon.itemCamera;
+  public ItemStack getTabIconItem() {
+    return new ItemStack(StartupCommon.itemCamera);
   }
 }

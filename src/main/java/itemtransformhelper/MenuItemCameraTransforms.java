@@ -78,17 +78,7 @@ public class MenuItemCameraTransforms
 
   private void alterField(boolean increase)
   {
-    ItemTransformVec3f transformVec3f = null;
-    switch (linkToHUDrenderer.selectedTransform) {
-      case THIRD_LEFT: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.thirdperson_left; break;}
-      case THIRD_RIGHT: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.thirdperson_right; break;}
-      case FIRST_LEFT: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.firstperson_left; break;}
-      case FIRST_RIGHT: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.firstperson_right; break;}
-      case GUI: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.gui; break;}
-      case HEAD: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.head; break;}
-      case FIXED: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.fixed; break;}
-      case GROUND: {transformVec3f = linkToHUDrenderer.itemCameraTransforms.ground; break;}
-    }
+    ItemTransformVec3f transformVec3f = getItemTransformRef(linkToHUDrenderer, linkToHUDrenderer.selectedTransform);
     if (transformVec3f == null) return; // should never happen
 
     final float SCALE_INCREMENT = 0.01F;
@@ -142,25 +132,22 @@ public class MenuItemCameraTransforms
         transformVec3f.translation.setZ(transformVec3f.translation.getZ() + (increase ? TRANSLATION_INCREMENT : -TRANSLATION_INCREMENT));
         break;
       }
+      case RESTORE_DEFAULT_ALL:
       case RESTORE_DEFAULT: {
         ItemModelFlexibleCamera.UpdateLink link = StartupClientOnly.modelBakeEventHandler.getItemOverrideLink();
         IBakedModel savedModel = link.itemModelToOverride;
         if (savedModel != null) {  // not sure why this would ever be null, but it was (in a bug report), so just check to make sure.
           link.itemModelToOverride = null;
-          if (savedModel instanceof IPerspectiveAwareModel) {  // IPerspectiveAware just have identity matrix for getItemCameraTransforms
-                                                               // --> need to back-calculate from the transform matrix
-            IPerspectiveAwareModel savedModelPA = (IPerspectiveAwareModel)savedModel;
-            ItemCameraTransforms.TransformType currentType = linkToHUDrenderer.selectedTransform.getVanillaTransformType();
-            Pair<? extends IBakedModel, Matrix4f> modelAndMatrix = savedModelPA.handlePerspective(currentType);
-            TRSRTransformation tr = new TRSRTransformation(modelAndMatrix.getRight());
-            ItemTransformVec3f newItemTransform = TRSRTransformationBugFix.toItemTransform(tr);
-            copyTransforms(newItemTransform, transformVec3f);
-          } else { // not IPerspectiveAwareModel
-            ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
-            copyNonPerspectiveAware(originalTransforms, transformVec3f, linkToHUDrenderer.selectedTransform);
+          if (linkToHUDrenderer.selectedField == HUDtextRenderer.HUDinfoUpdateLink.SelectedField.RESTORE_DEFAULT) {
+            copySingleTransform(linkToHUDrenderer, savedModel, linkToHUDrenderer.selectedTransform);
+          } else {
+            for (HUDtextRenderer.HUDinfoUpdateLink.TransformName transformName
+                    : HUDtextRenderer.HUDinfoUpdateLink.TransformName.values()) {
+              copySingleTransform(linkToHUDrenderer, savedModel, transformName);
+            }
           }
-          link.itemModelToOverride = savedModel;
         }
+        link.itemModelToOverride = savedModel;
         break;
       }
       case PRINT: {
@@ -188,6 +175,45 @@ public class MenuItemCameraTransforms
         break;
       }
     }
+  }
+
+  // points to the appropriate transform based on which transform has been selected.
+  private static ItemTransformVec3f getItemTransformRef(HUDtextRenderer.HUDinfoUpdateLink linkToHUDrenderer,
+                                                        HUDtextRenderer.HUDinfoUpdateLink.TransformName transformName)
+  {
+    switch (transformName) {
+      case THIRD_LEFT: {return linkToHUDrenderer.itemCameraTransforms.thirdperson_left; }
+      case THIRD_RIGHT: {return linkToHUDrenderer.itemCameraTransforms.thirdperson_right; }
+      case FIRST_LEFT: {return linkToHUDrenderer.itemCameraTransforms.firstperson_left; }
+      case FIRST_RIGHT: {return linkToHUDrenderer.itemCameraTransforms.firstperson_right; }
+      case GUI: {return linkToHUDrenderer.itemCameraTransforms.gui; }
+      case HEAD: {return linkToHUDrenderer.itemCameraTransforms.head; }
+      case FIXED: {return linkToHUDrenderer.itemCameraTransforms.fixed; }
+      case GROUND: {return linkToHUDrenderer.itemCameraTransforms.ground; }
+    }
+    return null;
+  }
+
+  private void copySingleTransform(HUDtextRenderer.HUDinfoUpdateLink linkToHUDrenderer,
+                                   IBakedModel savedModel,
+                                   HUDtextRenderer.HUDinfoUpdateLink.TransformName transformToBeCopied
+                                   )
+  {
+    ItemTransformVec3f transformVec3f = getItemTransformRef(linkToHUDrenderer, transformToBeCopied);
+
+    if (savedModel instanceof IPerspectiveAwareModel) {  // IPerspectiveAware just have identity matrix for getItemCameraTransforms
+      // --> need to back-calculate from the transform matrix
+      IPerspectiveAwareModel savedModelPA = (IPerspectiveAwareModel) savedModel;
+      ItemCameraTransforms.TransformType currentType = transformToBeCopied.getVanillaTransformType();
+      Pair<? extends IBakedModel, Matrix4f> modelAndMatrix = savedModelPA.handlePerspective(currentType);
+      TRSRTransformation tr = new TRSRTransformation(modelAndMatrix.getRight());
+      ItemTransformVec3f newItemTransform = TRSRTransformationBugFix.toItemTransform(tr);
+      copyTransforms(newItemTransform, transformVec3f);
+    } else { // not IPerspectiveAwareModel
+      ItemCameraTransforms originalTransforms = savedModel.getItemCameraTransforms();
+      copyNonPerspectiveAware(originalTransforms, transformVec3f, transformToBeCopied);
+    }
+
   }
 
   private static void printTransform(StringBuilder output, String transformView, ItemTransformVec3f itemTransformVec3f) {

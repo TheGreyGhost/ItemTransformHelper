@@ -30,7 +30,7 @@ public class ClientTickHandler
     boolean foundCamera = false;
     InventoryPlayer inventoryPlayer = player.inventory;
     for (int i = 0; i < InventoryPlayer.getHotbarSize(); ++i) {
-      ItemStack slotItemStack = inventoryPlayer.mainInventory[i];
+      ItemStack slotItemStack = inventoryPlayer.mainInventory.get(i);
       if (slotItemStack != null && slotItemStack.getItem() == StartupCommon.itemCamera) {
         foundCamera = true;
         break;
@@ -41,10 +41,10 @@ public class ClientTickHandler
     IBakedModel ibakedmodel = null;
     if (foundCamera) {
       ItemStack heldItemStack = player.getHeldItem(EnumHand.MAIN_HAND);
-      if (heldItemStack == null) {
+      if (heldItemStack == null || heldItemStack.func_190926_b()) {
         heldItemStack = player.getHeldItem(EnumHand.OFF_HAND);
       }
-      if (heldItemStack != null) {
+      if (heldItemStack != null && !heldItemStack.func_190926_b()) {
         ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(heldItemStack);
       }
     }

@@ -96,6 +96,7 @@ public class HUDtextRenderer
 
     displayText.add("======"); selectableField.add(NOT_SELECTABLE);
     displayText.add("RESET"); selectableField.add(HUDinfoUpdateLink.SelectedField.RESTORE_DEFAULT);
+    displayText.add("RSTALL"); selectableField.add(HUDinfoUpdateLink.SelectedField.RESTORE_DEFAULT_ALL);
     displayText.add("PRINT"); selectableField.add(HUDinfoUpdateLink.SelectedField.PRINT);
     displayText.add("======"); selectableField.add(NOT_SELECTABLE);
 
@@ -185,7 +186,7 @@ public class HUDtextRenderer
 
     public enum SelectedField {
       TRANSFORM(0), SCALE_X(1), SCALE_Y(2), SCALE_Z(3), ROTATE_X(4), ROTATE_Y(5), ROTATE_Z(6), TRANSLATE_X(7),
-      TRANSLATE_Y(8), TRANSLATE_Z(9), RESTORE_DEFAULT(10), PRINT(11);
+      TRANSLATE_Y(8), TRANSLATE_Z(9), RESTORE_DEFAULT(10), RESTORE_DEFAULT_ALL(11), PRINT(12);
 
       private SelectedField(int index) {fieldIndex = index;}
       public final int fieldIndex;
