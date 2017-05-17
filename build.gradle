@@ -20,14 +20,14 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "1.11a"
+version = "1.11.2a"
 group= "thegreyghost" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "itemtransformhelper"
 
 
 
 minecraft {
-    version = "1.11-13.19.1.2189"
+    version = "1.11.2-13.20.0.2298"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -35,7 +35,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20161111"
+    mappings = "snapshot_20170517"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 

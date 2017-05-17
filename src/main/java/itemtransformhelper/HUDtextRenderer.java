@@ -2,6 +2,9 @@ package itemtransformhelper;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,8 +15,6 @@ import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
 
 /**
  * User: The Grey Ghost
@@ -100,7 +101,7 @@ public class HUDtextRenderer
     displayText.add("PRINT"); selectableField.add(HUDinfoUpdateLink.SelectedField.PRINT);
     displayText.add("======"); selectableField.add(NOT_SELECTABLE);
 
-    FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+    FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
     int ypos = 2;
     int xpos = 2;
     for (int i = 0; i < displayText.size(); ++i) {
