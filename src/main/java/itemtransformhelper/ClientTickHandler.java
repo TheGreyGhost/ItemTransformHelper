@@ -24,7 +24,7 @@ public class ClientTickHandler
       return;
     }
 
-    EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+    EntityPlayerSP player = Minecraft.getMinecraft().player;
     if (player == null) return;
 
     boolean foundCamera = false;
@@ -41,10 +41,10 @@ public class ClientTickHandler
     IBakedModel ibakedmodel = null;
     if (foundCamera) {
       ItemStack heldItemStack = player.getHeldItem(EnumHand.MAIN_HAND);
-      if (heldItemStack == null || heldItemStack.func_190926_b()) {
+      if (heldItemStack == null || heldItemStack.isEmpty()) {
         heldItemStack = player.getHeldItem(EnumHand.OFF_HAND);
       }
-      if (heldItemStack != null && !heldItemStack.func_190926_b()) {
+      if (heldItemStack != null && !heldItemStack.isEmpty()) {
         ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(heldItemStack);
       }
     }
