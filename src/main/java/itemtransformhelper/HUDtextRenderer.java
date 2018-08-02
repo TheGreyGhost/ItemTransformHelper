@@ -7,9 +7,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -243,7 +243,7 @@ public class HUDtextRenderer
     float f1 = (float)(color >> 8 & 255) / 255.0F;
     float f2 = (float)(color & 255) / 255.0F;
     Tessellator tessellator = Tessellator.getInstance();
-    VertexBuffer vertexBuffer = tessellator.getBuffer();
+    BufferBuilder vertexBuffer = tessellator.getBuffer();
     GlStateManager.enableBlend();
     GlStateManager.disableTexture2D();
     GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

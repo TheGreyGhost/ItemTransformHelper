@@ -1,0 +1,59 @@
+This mapping 'snapshot_20171003' was designed for MC 1.12! Use at your own peril.This mapping 'snapshot_20171003' was designed for MC 1.12! Use at your own peril.
+
+#################################################
+         ForgeGradle 2.3-SNAPSHOT-ee3e3df        
+  https://github.com/MinecraftForge/ForgeGradle  
+#################################################
+                 Powered by MCP                  
+             http://modcoderpack.com             
+     by: Searge, ProfMobius, R4wk, ZeuX          
+     Fesh0r, IngisKahn, bspkrs, LexManos         
+#################################################
+Version string '1.12a' does not match SemVer specification 
+You should try SemVer : http://semver.org/
+:deobfCompileDummyTask
+:deobfProvidedDummyTask
+:getVersionJson
+:extractUserdev
+:extractDependencyATs SKIPPED
+:extractMcpData SKIPPED
+:extractMcpMappings SKIPPED
+:genSrgs SKIPPED
+:downloadClient SKIPPED
+:downloadServer SKIPPED
+:splitServerJar SKIPPED
+:mergeJars SKIPPED
+:deobfMcSRG SKIPPED
+:decompileMc SKIPPED
+:fixMcSources SKIPPED
+:applySourcePatches SKIPPED
+:remapMcSources SKIPPED
+:recompileMc SKIPPED
+:extractNatives SKIPPED
+:getAssetIndex UP-TO-DATE
+:getAssets
+Current status: 102/1283   7%
+Current status: 192/1283   14%
+Current status: 287/1283   22%
+Current status: 394/1283   30%
+Current status: 509/1283   39%
+Current status: 595/1283   46%
+Current status: 661/1283   51%
+Current status: 735/1283   57%
+Current status: 814/1283   63%
+Current status: 930/1283   72%
+Current status: 1023/1283   79%
+Current status: 1114/1283   86%
+Current status: 1230/1283   95%
+:makeStart SKIPPED
+:setupDecompWorkspace
+:eclipseClasspath
+:eclipseJdt
+:eclipseProject
+:makeEclipseCleanRunClient
+:makeEclipseCleanRunServer
+:eclipse
+
+BUILD SUCCESSFUL
+
+Total time: 1 mins 18.798 secs

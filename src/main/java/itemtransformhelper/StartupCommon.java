@@ -1,6 +1,10 @@
 package itemtransformhelper;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -26,7 +30,7 @@ public class StartupCommon
     // each instance of your item should have a name that is unique within your mod.  use lower case.
     itemCamera = (ItemCamera)(new ItemCamera().setUnlocalizedName("item_camera"));
     itemCamera.setRegistryName("item_camera");
-    GameRegistry.register(itemCamera);
+    MinecraftForge.EVENT_BUS.register(new StartupCommon());
   }
 
   public static void initCommon()
@@ -36,4 +40,10 @@ public class StartupCommon
   public static void postInitCommon()
   {
   }
+  
+  @SubscribeEvent
+  public void registerItem(RegistryEvent.Register<Item> event) {
+	  event.getRegistry().register(itemCamera);
+  }
+  
 }
