@@ -5,4 +5,8 @@ run/
 build/
 bin/
 .DS_Store
-
+.classpath
+.project
+.gradle
+.settings
+*.launch
