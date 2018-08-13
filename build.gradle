@@ -24,8 +24,6 @@ version = "1.11.2a"
 group= "thegreyghost" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "itemtransformhelper"
 
-
-
 minecraft {
     version = "1.11.2-13.20.0.2298"
     runDir = "run"
