@@ -1,0 +1,16 @@
+CREDITS.txt
+eclipse/
+gradle.properties
+run/
+build/
+bin/
+out/
+.DS_Store
+.classpath
+.project
+.gradle
+.settings
+*.launch
+License.txt
+README.md
+LICENSE-Paulscode*.*

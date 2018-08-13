@@ -32,163 +32,159 @@ import java.util.List;
 @SuppressWarnings({ "deprecation", "unchecked" })
 public class ItemModelFlexibleCamera implements IBakedModel
 {
-  public static ItemModelFlexibleCamera getWrappedModel(IBakedModel modelToWrap, UpdateLink linkToCurrentInformation)
-  {
-    if (modelToWrap instanceof IPerspectiveAwareModel) {
-      return new ItemModelFlexibleCameraPerspectiveAware(modelToWrap, linkToCurrentInformation);
-    } else {
-      return new ItemModelFlexibleCamera(modelToWrap, linkToCurrentInformation);
-    }
-  }
+	public static ItemModelFlexibleCamera getWrappedModel(IBakedModel modelToWrap, UpdateLink linkToCurrentInformation)
+	{
+		// All IBakedModel instances are perspective-aware now
+		return new ItemModelFlexibleCameraPerspectiveAware(modelToWrap, linkToCurrentInformation);
+	}
 
-  private ItemModelFlexibleCamera(IBakedModel i_modelToWrap, UpdateLink linkToCurrentInformation)
-  {
-    updateLink = linkToCurrentInformation;
-    iBakedModel = i_modelToWrap;
-  }
+	private ItemModelFlexibleCamera(IBakedModel i_modelToWrap, UpdateLink linkToCurrentInformation)
+	{
+		updateLink = linkToCurrentInformation;
+		iBakedModel = i_modelToWrap;
+	}
 
 
-//
-//  @Override
-//  public List getFaceQuads(EnumFacing enumFacing) {
-//    return iBakedModel.getFaceQuads(enumFacing);
-//  }
-//
-//  @Override
-//  public List getGeneralQuads() {
-//    return iBakedModel.getGeneralQuads();
-//  }
+	//
+	//  @Override
+	//  public List getFaceQuads(EnumFacing enumFacing) {
+	//    return iBakedModel.getFaceQuads(enumFacing);
+	//  }
+	//
+	//  @Override
+	//  public List getGeneralQuads() {
+	//    return iBakedModel.getGeneralQuads();
+	//  }
 
-  @Override
-  public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
-  {
-    return iBakedModel.getQuads(state, side, rand);
-  }
+	@Override
+	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
+	{
+		return iBakedModel.getQuads(state, side, rand);
+	}
 
-  public ItemOverrideList getOverrides()
-  {
-    return iBakedModel.getOverrides();
-  }
+	public ItemOverrideList getOverrides()
+	{
+		return iBakedModel.getOverrides();
+	}
 
 
 
-//  @Override
-//  public VertexFormat getFormat() {
-//    if (iBakedModel instanceof IFlexibleBakedModel) {
-//      return ((IFlexibleBakedModel) iBakedModel).getFormat();
-//    } else {
-//      return Attributes.DEFAULT_BAKED_FORMAT;
-//    }
-//  }
+	//  @Override
+	//  public VertexFormat getFormat() {
+	//    if (iBakedModel instanceof IFlexibleBakedModel) {
+	//      return ((IFlexibleBakedModel) iBakedModel).getFormat();
+	//    } else {
+	//      return Attributes.DEFAULT_BAKED_FORMAT;
+	//    }
+	//  }
 
-  @Override
-  public boolean isAmbientOcclusion() {
-    return iBakedModel.isAmbientOcclusion();
-  }
+	@Override
+	public boolean isAmbientOcclusion() {
+		return iBakedModel.isAmbientOcclusion();
+	}
 
-  @Override
-  public boolean isGui3d() {
-    return iBakedModel.isGui3d();
-  }
+	@Override
+	public boolean isGui3d() {
+		return iBakedModel.isGui3d();
+	}
 
-  @Override
-  public boolean isBuiltInRenderer() {
-    return iBakedModel.isBuiltInRenderer();
-  }
+	@Override
+	public boolean isBuiltInRenderer() {
+		return iBakedModel.isBuiltInRenderer();
+	}
 
-  @Override
-  public TextureAtlasSprite getParticleTexture() {
-    return iBakedModel.getParticleTexture();
-  }
+	@Override
+	public TextureAtlasSprite getParticleTexture() {
+		return iBakedModel.getParticleTexture();
+	}
 
-  @Override
-  public ItemCameraTransforms getItemCameraTransforms() {
-    return (updateLink.itemModelToOverride == this) ? updateLink.forcedTransform : iBakedModel.getItemCameraTransforms();
-  }
+	@Override
+	public ItemCameraTransforms getItemCameraTransforms() {
+		return (updateLink.itemModelToOverride == this) ? updateLink.forcedTransform : iBakedModel.getItemCameraTransforms();
+	}
 
-  protected final UpdateLink updateLink;
+	protected final UpdateLink updateLink;
 
-  public IBakedModel getIBakedModel() {
-    return iBakedModel;
-  }
+	public IBakedModel getIBakedModel() {
+		return iBakedModel;
+	}
 
-  private final IBakedModel iBakedModel;
+	private final IBakedModel iBakedModel;
 
-  public static class ItemModelFlexibleCameraPerspectiveAware extends ItemModelFlexibleCamera implements IPerspectiveAwareModel
-  {
-    ItemModelFlexibleCameraPerspectiveAware(IBakedModel i_modelToWrap, UpdateLink linkToCurrentInformation)
-    {
-      super(i_modelToWrap, linkToCurrentInformation);
-    }
+	public static class ItemModelFlexibleCameraPerspectiveAware extends ItemModelFlexibleCamera
+	{
+		ItemModelFlexibleCameraPerspectiveAware(IBakedModel i_modelToWrap, UpdateLink linkToCurrentInformation)
+		{
+			super(i_modelToWrap, linkToCurrentInformation);
+		}
 
-    @Override
-    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-      if (updateLink.itemModelToOverride == this) {
-        ItemTransformVec3f itemTransformVec3f;
-        switch (cameraTransformType) {
-          case NONE: {
-              itemTransformVec3f = ItemTransformVec3f.DEFAULT;
-              break;
-          }
-          case FIRST_PERSON_LEFT_HAND: {
-                itemTransformVec3f = updateLink.forcedTransform.firstperson_left;
-                break;
-            }
-          case FIRST_PERSON_RIGHT_HAND: {
-            itemTransformVec3f = updateLink.forcedTransform.firstperson_right;
-            break;
-          }
-          case THIRD_PERSON_LEFT_HAND: {
-              itemTransformVec3f = updateLink.forcedTransform.thirdperson_left;
-              break;
-          }
-          case THIRD_PERSON_RIGHT_HAND: {
-            itemTransformVec3f = updateLink.forcedTransform.thirdperson_right;
-            break;
-          }
-          case GUI: {
-              itemTransformVec3f = updateLink.forcedTransform.gui;
-              break;
-          }
-          case HEAD: {
-              itemTransformVec3f = updateLink.forcedTransform.head;
-              break;
-          }
-          case GROUND: {
-            itemTransformVec3f = updateLink.forcedTransform.ground;
-            break;
-          }
-          case FIXED: {
-            itemTransformVec3f = updateLink.forcedTransform.fixed;
-            break;
-          }
+		@Override
+		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+			if (updateLink.itemModelToOverride == this) {
+				ItemTransformVec3f itemTransformVec3f;
+				switch (cameraTransformType) {
+				case NONE: {
+					itemTransformVec3f = ItemTransformVec3f.DEFAULT;
+					break;
+				}
+				case FIRST_PERSON_LEFT_HAND: {
+					itemTransformVec3f = updateLink.forcedTransform.firstperson_left;
+					break;
+				}
+				case FIRST_PERSON_RIGHT_HAND: {
+					itemTransformVec3f = updateLink.forcedTransform.firstperson_right;
+					break;
+				}
+				case THIRD_PERSON_LEFT_HAND: {
+					itemTransformVec3f = updateLink.forcedTransform.thirdperson_left;
+					break;
+				}
+				case THIRD_PERSON_RIGHT_HAND: {
+					itemTransformVec3f = updateLink.forcedTransform.thirdperson_right;
+					break;
+				}
+				case GUI: {
+					itemTransformVec3f = updateLink.forcedTransform.gui;
+					break;
+				}
+				case HEAD: {
+					itemTransformVec3f = updateLink.forcedTransform.head;
+					break;
+				}
+				case GROUND: {
+					itemTransformVec3f = updateLink.forcedTransform.ground;
+					break;
+				}
+				case FIXED: {
+					itemTransformVec3f = updateLink.forcedTransform.fixed;
+					break;
+				}
 
-          default: {
-           throw new IllegalArgumentException("Unknown cameraTransformType:" + cameraTransformType);
-          }
-        }
+				default: {
+					throw new IllegalArgumentException("Unknown cameraTransformType:" + cameraTransformType);
+				}
+				}
 
-        TRSRTransformation tr = new TRSRTransformation(itemTransformVec3f);
-        Matrix4f mat = null;
-        if (tr != null) { // && tr != TRSRTransformation.identity()) {
-          mat = tr.getMatrix();
-        }
-        // The TRSRTransformation for vanilla items have blockCenterToCorner() applied, however handlePerspective
-        //  reverses it back again with blockCornerToCenter().  So we don't need to apply it here.
+				TRSRTransformation tr = new TRSRTransformation(itemTransformVec3f);
+				Matrix4f mat = null;
+				if (tr != null) { // && tr != TRSRTransformation.identity()) {
+					mat = tr.getMatrix();
+				}
+				// The TRSRTransformation for vanilla items have blockCenterToCorner() applied, however handlePerspective
+				//  reverses it back again with blockCornerToCenter().  So we don't need to apply it here.
 
-        return Pair.of(this, mat);
+				return Pair.of(this, mat);
 
-      } else {
-        IBakedModel baseModel = getIBakedModel();
-        return ((IPerspectiveAwareModel) baseModel).handlePerspective(cameraTransformType);
-      }
-    }
-  }
+			} else {
+				return getIBakedModel().handlePerspective(cameraTransformType);
+			}
+		}
+	}
 
-  public static class UpdateLink
-  {
-    public IBakedModel itemModelToOverride;
-    public ItemCameraTransforms forcedTransform;
-  }
+	public static class UpdateLink
+	{
+		public IBakedModel itemModelToOverride;
+		public ItemCameraTransforms forcedTransform;
+	}
 
 }

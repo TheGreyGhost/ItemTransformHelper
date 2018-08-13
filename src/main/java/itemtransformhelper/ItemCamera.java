@@ -2,9 +2,13 @@ package itemtransformhelper;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,7 +30,7 @@ public class ItemCamera extends Item
   @SideOnly(Side.CLIENT)
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public void addInformation(ItemStack stack, EntityPlayer playerIn, List tooltip, boolean advanced) {
+  public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
     tooltip.add("1) Place the camera in your hotbar");
     tooltip.add("2) Hold an item in your hand");
     tooltip.add("3) Use the cursor keys to ");
