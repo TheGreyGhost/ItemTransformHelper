@@ -25,4 +25,4 @@ For background information on
 - This link describes the structure of the JSON Item Model file (see the Item Models section halfway down):
    http://minecraft.gamepedia.com/Block_models
 
-
+Thanks to Romejanic for updating to 1.12.2!

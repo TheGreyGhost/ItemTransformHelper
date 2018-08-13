@@ -4,6 +4,7 @@ gradle.properties
 run/
 build/
 bin/
+out/
 .DS_Store
 .classpath
 .project
