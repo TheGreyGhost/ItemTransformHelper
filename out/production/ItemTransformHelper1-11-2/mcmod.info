@@ -1,0 +1,16 @@
+[
+{
+  "modid": "itemtransformhelper",
+  "name": "Item Transform Helper",
+  "description": "Interactively change the position, scale, and rotation of an item",
+  "version": "1.11.2a",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["TGG"],
+  "credits": "The Forge, MCP, and FML guys. Maruohon",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
