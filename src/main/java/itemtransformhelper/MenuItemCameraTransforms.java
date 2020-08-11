@@ -209,7 +209,7 @@ public class MenuItemCameraTransforms {
         ItemTransformVec3f transformVec3f = getItemTransformRef(linkToHUDrenderer, transformToBeCopied);
         ItemCameraTransforms.TransformType currentType = transformToBeCopied.getVanillaTransformType();
         ItemTransformVec3f transform = savedModel.getItemCameraTransforms().getTransform(currentType);
-		copyTransforms(transform, transformVec3f);
+        copyTransforms(transform, transformVec3f);
     }
 
     private static void printTransform(StringBuilder output, String transformView, ItemTransformVec3f itemTransformVec3f) {

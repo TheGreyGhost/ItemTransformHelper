@@ -16,19 +16,16 @@ import java.util.List;
  * ItemCamera is very simple item used to activate the ItemCameraTransforms override when it is held in the hotbar.
  * See the Notes.
  */
-public class ItemCamera extends Item
-{
-  public ItemCamera(Properties properties)
-  {
-    super(properties);
-  }
+public class ItemCamera extends Item {
+    public ItemCamera(Properties properties) {
+        super(properties);
+    }
 
-  @Override
-  public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
-  {
-    tooltip.add(new StringTextComponent("1) Place the camera in your hotbar"));
-    tooltip.add(new StringTextComponent("2) Hold an item in your hand"));
-    tooltip.add(new StringTextComponent("3) Use the cursor keys to "));
-    tooltip.add(new StringTextComponent("   modify the item transform."));
-  }
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new StringTextComponent("1) Place the camera in your hotbar"));
+        tooltip.add(new StringTextComponent("2) Hold an item in your hand"));
+        tooltip.add(new StringTextComponent("3) Use the cursor keys to "));
+        tooltip.add(new StringTextComponent("   modify the item transform."));
+    }
 }
