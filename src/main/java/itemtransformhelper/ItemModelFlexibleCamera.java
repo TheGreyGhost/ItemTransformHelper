@@ -6,11 +6,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemTransformVec3f;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.TransformationMatrix;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.model.TransformationHelper;
@@ -57,35 +54,16 @@ public class ItemModelFlexibleCamera extends BakedModelWrapper
 	}
 
 	@Override
-	public boolean doesHandlePerspectives() {
-		if (updateLink.itemModelToOverride == this) {
-			return true;
-		}
-		return originalModel.doesHandlePerspectives();
-	}
-
-	// none of this should be needed anymore
-
-	@Override
 	public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
 		if (updateLink.itemModelToOverride == this) {
-			return handlePerspectiveOther(cameraTransformType, mat);
+			TransformationMatrix tr = TransformationHelper.toTransformation(getItemCameraTransforms().getTransform(cameraTransformType));
+			if(!tr.isIdentity()) {
+				tr.push(mat);
+			}
+			return this;
 		} else {
 			return super.handlePerspective(cameraTransformType, mat);
 		}
-	}
-
-	public IBakedModel handlePerspectiveOther(ItemCameraTransforms.TransformType type, MatrixStack stack)
-	{
-		TransformationMatrix tr = TransformationHelper.toTransformation(getItemCameraTransforms().getTransform(type));
-		if(!tr.isIdentity()) {
-			tr.push(stack);
-		}
-		return this;
-	}
-
-	public IBakedModel getIBakedModel() {
-		return originalModel;
 	}
 
 	public static class UpdateLink
