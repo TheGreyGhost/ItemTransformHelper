@@ -1,20 +1,21 @@
 package itemtransformhelper;
 
-import java.util.ArrayList;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.ArrayList;
 
 /**
  * User: The Grey Ghost
@@ -101,7 +102,7 @@ public class HUDtextRenderer
     displayText.add("PRINT"); selectableField.add(HUDinfoUpdateLink.SelectedField.PRINT);
     displayText.add("======"); selectableField.add(NOT_SELECTABLE);
 
-    FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
     int ypos = 2;
     int xpos = 2;
     for (int i = 0; i < displayText.size(); ++i) {
@@ -112,11 +113,11 @@ public class HUDtextRenderer
       final int GREEN_HALF_TRANSPARENT = 0x6F00FF00;
       boolean fieldIsSelected = (huDinfoUpdateLink.selectedField == selectableField.get(i));
       int highlightColour = fieldIsSelected ? GREEN_HALF_TRANSPARENT : MED_GRAY_HALF_TRANSPARENT;
-      drawRect(xpos - 1, ypos - 1, xpos + fontRenderer.getStringWidth(msg) + 1, ypos + fontRenderer.FONT_HEIGHT - 1, highlightColour);
+      drawRect(event.getMatrixStack(), xpos - 1, ypos - 1, xpos + fontRenderer.getStringWidth(msg) + 1, ypos + fontRenderer.FONT_HEIGHT - 1, highlightColour);
       final int LIGHT_GRAY = 0xE0E0E0;
       final int BLACK = 0x000000;
       int stringColour = fieldIsSelected ? BLACK : LIGHT_GRAY;
-      fontRenderer.drawString(msg, xpos, ypos, stringColour);
+      fontRenderer.drawString(event.getMatrixStack(), msg, xpos, ypos, stringColour);
     }
   }
 
@@ -136,14 +137,14 @@ public class HUDtextRenderer
       final Vector3f TRANSLATION_DEFAULT = new Vector3f(0.0F, 0.0F, 0.0F);
       final Vector3f SCALE_DEFAULT = new Vector3f(1.0F, 1.0F, 1.0F);
 
-      ItemTransformVec3f itvThirdLeft = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
-      ItemTransformVec3f itvThirdRight = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
-      ItemTransformVec3f itvFirstLeft = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
-      ItemTransformVec3f itvFirstRight = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
-      ItemTransformVec3f itvHead = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
-      ItemTransformVec3f itvGui = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
-      ItemTransformVec3f itvGround = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
-      ItemTransformVec3f itvFixed = new ItemTransformVec3f(new Vector3f(ROTATION_DEFAULT), new Vector3f(TRANSLATION_DEFAULT), new Vector3f(SCALE_DEFAULT));
+      ItemTransformVec3f itvThirdLeft = new ItemTransformVec3f(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+      ItemTransformVec3f itvThirdRight = new ItemTransformVec3f(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+      ItemTransformVec3f itvFirstLeft = new ItemTransformVec3f(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+      ItemTransformVec3f itvFirstRight = new ItemTransformVec3f(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+      ItemTransformVec3f itvHead = new ItemTransformVec3f(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+      ItemTransformVec3f itvGui = new ItemTransformVec3f(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+      ItemTransformVec3f itvGround = new ItemTransformVec3f(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+      ItemTransformVec3f itvFixed = new ItemTransformVec3f(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
       itemCameraTransforms = new ItemCameraTransforms(itvThirdLeft, itvThirdRight, itvFirstLeft, itvFirstRight, itvHead, itvGui, itvGround, itvFixed);
 
       selectedField = SelectedField.TRANSFORM;
@@ -220,44 +221,38 @@ public class HUDtextRenderer
   private HUDinfoUpdateLink huDinfoUpdateLink;
 
   // copied straight from vanilla GuiIngameForge
-  private static void drawRect(int left, int top, int right, int bottom, int color)
-  {
-    int j1;
-
+  // copied straight from vanilla GuiIngameForge
+  private static void drawRect(MatrixStack matrixStackIn, int left, int top, int right, int bottom, int color) {
     if (left < right)
     {
-      j1 = left;
+      int i = left;
       left = right;
-      right = j1;
+      right = i;
     }
 
     if (top < bottom)
     {
-      j1 = top;
+      int j = top;
       top = bottom;
-      bottom = j1;
+      bottom = j;
     }
 
-    float f3 = (float)(color >> 24 & 255) / 255.0F;
-    float f = (float)(color >> 16 & 255) / 255.0F;
-    float f1 = (float)(color >> 8 & 255) / 255.0F;
-    float f2 = (float)(color & 255) / 255.0F;
+    float alpha = (float) (color >> 24 & 255) / 255.0F;
+    float red = (float) (color >> 16 & 255) / 255.0F;
+    float green = (float) (color >> 8 & 255) / 255.0F;
+    float blue = (float) (color & 255) / 255.0F;
     Tessellator tessellator = Tessellator.getInstance();
-    BufferBuilder vertexBuffer = tessellator.getBuffer();
+    BufferBuilder builder = tessellator.getBuffer();
     GlStateManager.enableBlend();
-    GlStateManager.disableTexture2D();
-    GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-    GlStateManager.color(f, f1, f2, f3);
-
-    vertexBuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-    vertexBuffer.pos((double) left, (double) bottom, 0.0D).endVertex();
-    vertexBuffer.pos((double) right, (double) bottom, 0.0D).endVertex();
-    vertexBuffer.pos((double) right, (double) top, 0.0D).endVertex();
-    vertexBuffer.pos((double) left, (double) top, 0.0D).endVertex();
+    RenderSystem.disableTexture();
+    builder.begin(7, DefaultVertexFormats.POSITION_COLOR);
+    Matrix4f matrix = matrixStackIn.getLast().getMatrix();
+    builder.pos(matrix, (float) left, (float) bottom, 0F).color(red, green, blue, alpha).endVertex();
+    builder.pos(matrix, (float) right, (float) bottom, 0F).color(red, green, blue, alpha).endVertex();
+    builder.pos(matrix, (float) right, (float) top, 0F).color(red, green, blue, alpha).endVertex();
+    builder.pos(matrix, (float) left, (float) top, 0F).color(red, green, blue, alpha).endVertex();
     tessellator.draw();
-    GlStateManager.enableTexture2D();
+    RenderSystem.enableTexture();
     GlStateManager.disableBlend();
   }
-
-
 }

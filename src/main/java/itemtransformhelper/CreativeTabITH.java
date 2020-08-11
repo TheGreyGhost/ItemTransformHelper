@@ -1,23 +1,23 @@
 package itemtransformhelper;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * User: The Grey Ghost
  * Date: 26/01/2015
  */
-public class CreativeTabITH extends CreativeTabs
+public class CreativeTabITH extends ItemGroup
 {
-  public CreativeTabITH(int id, String unlocalizedName) {
-    super(id, unlocalizedName);
+  public CreativeTabITH(String unlocalizedName) {
+    super(unlocalizedName);
   }
 
-  @SideOnly(Side.CLIENT)
-  public ItemStack getTabIconItem() {
-    return new ItemStack(StartupCommon.itemCamera);
+  @OnlyIn(Dist.CLIENT)
+  @Override
+  public ItemStack createIcon() {
+    return new ItemStack(StartupCommon.ITEM_CAMERA.get());
   }
 }

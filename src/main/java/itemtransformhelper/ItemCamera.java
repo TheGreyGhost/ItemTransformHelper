@@ -1,16 +1,14 @@
 package itemtransformhelper;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * User: The Grey Ghost
@@ -20,20 +18,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ItemCamera extends Item
 {
-  public ItemCamera()
+  public ItemCamera(Properties properties)
   {
-    this.setMaxStackSize(1);
-    this.setCreativeTab(StartupCommon.tabITH);
+    super(properties);
   }
 
-  // adds 'tooltip' text
-  @SideOnly(Side.CLIENT)
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-    tooltip.add("1) Place the camera in your hotbar");
-    tooltip.add("2) Hold an item in your hand");
-    tooltip.add("3) Use the cursor keys to ");
-    tooltip.add("   modify the item transform.");
+  public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+  {
+    tooltip.add(new StringTextComponent("1) Place the camera in your hotbar"));
+    tooltip.add(new StringTextComponent("2) Hold an item in your hand"));
+    tooltip.add(new StringTextComponent("3) Use the cursor keys to "));
+    tooltip.add(new StringTextComponent("   modify the item transform."));
   }
 }

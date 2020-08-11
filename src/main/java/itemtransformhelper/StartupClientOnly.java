@@ -1,8 +1,7 @@
 package itemtransformhelper;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * User: The Grey Ghost
@@ -23,22 +22,10 @@ public class StartupClientOnly
   public final static ClientTickHandler clientTickHandler = new ClientTickHandler();
   public static MenuItemCameraTransforms menuItemCameraTransforms;
 
-  public static void preInitClientOnly()
+  public static void clientSetup()
   {
-    MinecraftForge.EVENT_BUS.register(modelBakeEventHandler);
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(modelBakeEventHandler::modelBakeEvent);
     MinecraftForge.EVENT_BUS.register(clientTickHandler);
-  }
-
-  public static void initClientOnly()
-  {
-    // required in order for the renderer to know how to render your item.  Likely to change in the near future.
-    ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation("itemtransformhelper:item_camera", "inventory");
-    final int DEFAULT_ITEM_SUBTYPE = 0;
-    Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(StartupCommon.itemCamera, DEFAULT_ITEM_SUBTYPE, itemModelResourceLocation);
-  }
-
-  public static void postInitClientOnly()
-  {
     menuItemCameraTransforms = new MenuItemCameraTransforms();
   }
 }
