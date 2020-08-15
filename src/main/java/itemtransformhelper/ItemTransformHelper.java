@@ -1,41 +1,35 @@
 package itemtransformhelper;
 
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-@Mod(modid = ItemTransformHelper.MODID, version = ItemTransformHelper.VERSION)
-public class ItemTransformHelper
-{
+@Mod(ItemTransformHelper.MODID)
+public class ItemTransformHelper {
     public static final String MODID = "itemtransformhelper";
-    public static final String VERSION = "1.12.2a";
+    public static final Logger logger = LogManager.getLogger(MODID);
 
-    // The instance of your mod that Forge uses.  Optional.
-    @Mod.Instance(ItemTransformHelper.MODID)
-    public static ItemTransformHelper instance;
+    public ItemTransformHelper() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-    // Says where the client and server 'proxy' code is loaded.
-    @SidedProxy(clientSide="itemtransformhelper.ClientOnlyProxy", serverSide="itemtransformhelper.DedicatedServerProxy")
-    public static CommonProxy proxy;
+        // Register the setup method for modloading
+        modEventBus.addListener(this::setup);
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-      proxy.preInit();
+        // Register the doClientStuff method for modloading
+        modEventBus.addListener(this::clientSetup);
+
+        StartupCommon.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-      proxy.init();
+    private void setup(final FMLCommonSetupEvent event) {
+        // nothing left to do here with item reg moved to deferred reg
     }
 
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-      proxy.postInit();
+    public void clientSetup(final FMLClientSetupEvent event) {
+        StartupClientOnly.clientSetup();
     }
 }

@@ -1,16 +1,25 @@
-CREDITS.txt
-eclipse/
-gradle.properties
-run/
-build/
-bin/
-out/
-.DS_Store
+# eclipse
+bin
+*.launch
+.settings
+.metadata
 .classpath
 .project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
 .gradle
-.settings
-*.launch
-License.txt
-README.md
-LICENSE-Paulscode*.*
+
+# other
+eclipse
+run
+
+# Files from Forge MDK
+forge*changelog.txt
