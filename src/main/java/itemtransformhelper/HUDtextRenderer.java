@@ -43,8 +43,8 @@ public class HUDtextRenderer {
     public void displayHUDtext(RenderGameOverlayEvent.Text event) {
         if (huDinfoUpdateLink == null || !huDinfoUpdateLink.menuVisible || huDinfoUpdateLink.itemCameraTransforms == null)
             return;
-        ArrayList<String> displayText = new ArrayList<String>();
-        ArrayList<HUDinfoUpdateLink.SelectedField> selectableField = new ArrayList<HUDinfoUpdateLink.SelectedField>();
+        ArrayList<String> displayText = new ArrayList<>();
+        ArrayList<HUDinfoUpdateLink.SelectedField> selectableField = new ArrayList<>();
 
         final HUDinfoUpdateLink.SelectedField NOT_SELECTABLE = null;
 
@@ -233,7 +233,7 @@ public class HUDtextRenderer {
             TRANSFORM(0), SCALE_X(1), SCALE_Y(2), SCALE_Z(3), ROTATE_X(4), ROTATE_Y(5), ROTATE_Z(6), TRANSLATE_X(7),
             TRANSLATE_Y(8), TRANSLATE_Z(9), RESTORE_DEFAULT(10), RESTORE_DEFAULT_ALL(11), PRINT(12);
 
-            private SelectedField(int index) {
+            SelectedField(int index) {
                 fieldIndex = index;
             }
 
@@ -265,8 +265,7 @@ public class HUDtextRenderer {
 
     private HUDinfoUpdateLink huDinfoUpdateLink;
 
-    // copied straight from vanilla GuiIngameForge
-    // copied straight from vanilla GuiIngameForge
+    // copied straight from vanilla ForgeIngameGui
     private static void drawRect(MatrixStack matrixStackIn, int left, int top, int right, int bottom, int color) {
         if (left < right) {
             int i = left;

@@ -8,7 +8,7 @@ modId="itemtransformhelper"
 version="${file.jarVersion}"
 displayName="Item Transform Helper"
 credits="The Forge, MCP, and FML guys. Maruohon"
-authors="TGG, Romejanic"
+authors="TGG, Romejanic, lehjr"
 description="Interactively change the position, scale, and rotation of an item"
 [[dependencies.itemtransformhelper]]
     modId="forge"
