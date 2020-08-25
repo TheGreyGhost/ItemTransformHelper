@@ -40,12 +40,6 @@ public class ItemModelFlexibleCamera extends BakedModelWrapper {
         updateLink = linkToCurrentInformation;
     }
 
-    @Nonnull
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
-        return super.getQuads(state, side, rand, EmptyModelData.INSTANCE);
-    }
-
     @Override
     public ItemCameraTransforms getItemCameraTransforms() {
         return (updateLink.itemModelToOverride == this) ? updateLink.forcedTransform : originalModel.getItemCameraTransforms();
