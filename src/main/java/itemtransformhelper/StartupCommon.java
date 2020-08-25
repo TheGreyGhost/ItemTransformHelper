@@ -24,7 +24,7 @@ import static itemtransformhelper.ItemTransformHelper.MODID;
 public class StartupCommon {
     public static ItemGroup tabITH = new CreativeTabITH("itemtransformhelper");
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
+    public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, MODID);
     public static final RegistryObject<ItemCamera> ITEM_CAMERA = ITEMS.register("item_camera", () -> new ItemCamera(
             new Item.Properties().group(tabITH).maxStackSize(1)));
 }

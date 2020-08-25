@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[32,)"
+loaderVersion="[28,)"
 # The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
 license="All rights reserved"
@@ -13,12 +13,12 @@ description="Interactively change the position, scale, and rotation of an item"
 [[dependencies.itemtransformhelper]]
     modId="forge"
     mandatory=true
-    versionRange="[32,)"
+    versionRange="[28,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.itemtransformhelper]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.1]"
+    versionRange="[1.15.2]"
     ordering="NONE"
     side="BOTH"

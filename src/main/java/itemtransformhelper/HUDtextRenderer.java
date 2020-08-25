@@ -5,13 +5,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemTransformVec3f;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -157,11 +154,11 @@ public class HUDtextRenderer {
             final int GREEN_HALF_TRANSPARENT = 0x6F00FF00;
             boolean fieldIsSelected = (huDinfoUpdateLink.selectedField == selectableField.get(i));
             int highlightColour = fieldIsSelected ? GREEN_HALF_TRANSPARENT : MED_GRAY_HALF_TRANSPARENT;
-            drawRect(event.getMatrixStack(), xpos - 1, ypos - 1, xpos + fontRenderer.getStringWidth(msg) + 1, ypos + fontRenderer.FONT_HEIGHT - 1, highlightColour);
+            drawRect(xpos - 1, ypos - 1, xpos + fontRenderer.getStringWidth(msg) + 1, ypos + fontRenderer.FONT_HEIGHT - 1, highlightColour);
             final int LIGHT_GRAY = 0xE0E0E0;
             final int BLACK = 0x000000;
             int stringColour = fieldIsSelected ? BLACK : LIGHT_GRAY;
-            fontRenderer.drawString(event.getMatrixStack(), msg, xpos, ypos, stringColour);
+            fontRenderer.drawString(msg, xpos, ypos, stringColour);
         }
     }
 
@@ -265,8 +262,13 @@ public class HUDtextRenderer {
 
     private HUDinfoUpdateLink huDinfoUpdateLink;
 
-    // copied straight from vanilla ForgeIngameGui
-    private static void drawRect(MatrixStack matrixStackIn, int left, int top, int right, int bottom, int color) {
+
+    private static void drawRect(int left, int top, int right, int bottom, int color) {
+      drawRect(TransformationMatrix.identity().getMatrix(), left, top, right, bottom, color);
+    }
+
+  // copied straight from vanilla ForgeIngameGui
+    private static void drawRect(Matrix4f matrix, int left, int top, int right, int bottom, int color) {
         if (left < right) {
             int i = left;
             left = right;
@@ -288,7 +290,7 @@ public class HUDtextRenderer {
         GlStateManager.enableBlend();
         RenderSystem.disableTexture();
         builder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrixStackIn.getLast().getMatrix();
+//        Matrix4f matrix = matrixStackIn.getLast().getMatrix();
         builder.pos(matrix, (float) left, (float) bottom, 0F).color(red, green, blue, alpha).endVertex();
         builder.pos(matrix, (float) right, (float) bottom, 0F).color(red, green, blue, alpha).endVertex();
         builder.pos(matrix, (float) right, (float) top, 0F).color(red, green, blue, alpha).endVertex();
