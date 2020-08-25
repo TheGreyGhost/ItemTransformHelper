@@ -9,6 +9,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Locale;
@@ -162,8 +164,8 @@ public class MenuItemCameraTransforms {
                 output.append(",\n");
                 printTransform(output, "ground", linkToHUDrenderer.itemCameraTransforms.ground);
                 output.append("\n}");
-                System.out.println(output);
-                StringTextComponent text = new StringTextComponent("                   \"display\" JSON section printed to console...");
+                LOGGER.info(output);
+                StringTextComponent text = new StringTextComponent("                   \"display\" JSON section printed to console (LOGGER.info)...");
                 Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(text);
                 break;
             }
@@ -293,4 +295,5 @@ public class MenuItemCameraTransforms {
         private ArrowKeys lastKey = ArrowKeys.NONE;
         private KeyPressCallback keyPressCallback;
     }
+    private static final Logger LOGGER = LogManager.getLogger();
 }
