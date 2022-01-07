@@ -1,5 +1,5 @@
 # Item Transform Helper
-==================
+
 When you create a custom item, you need to provide ItemCameraTransforms for it. This project is an interactive
   tool to help you get the transforms right by interactively adjusting them.
 
