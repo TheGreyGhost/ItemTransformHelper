@@ -26,10 +26,13 @@ import static itemtransformhelper.ItemTransformHelper.MODID;
  */
 public class StartupCommon {
 
+    // Registries
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MODID, Registry.ITEM_KEY);
 
+    // Items
     public static final RegistrySupplier<ItemCamera> ITEM_CAMERA = ITEMS.register("item_camera", ItemCamera::new);
 
+    // Item Groups
     public static final ItemGroup ITH_ITEM_GROUP =
             CreativeTabRegistry.create(new Identifier(MODID, "items"), () -> new ItemStack(ITEM_CAMERA.get()));
 

@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class MenuItemCameraTransformsImpl {
 
     public static Queue<HUDTextRenderer> RENDERERS = new ConcurrentLinkedQueue<>();
-
     public static Queue<MenuItemCameraTransforms.MenuKeyHandler> HANDLERS = new ConcurrentLinkedQueue<>();
 
     public static void registerListeners(HUDTextRenderer hudTextRenderer,

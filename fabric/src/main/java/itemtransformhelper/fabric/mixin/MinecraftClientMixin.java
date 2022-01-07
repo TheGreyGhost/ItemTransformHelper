@@ -19,4 +19,5 @@ public class MinecraftClientMixin {
         clientTickHandler.clientTickEvent();
         HANDLERS.forEach(MenuItemCameraTransforms.MenuKeyHandler::clientTick);
     }
+
 }

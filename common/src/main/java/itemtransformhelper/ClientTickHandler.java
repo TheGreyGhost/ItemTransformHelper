@@ -20,30 +20,29 @@ public class ClientTickHandler {
         if (player == null) return;
 
         boolean foundCamera = false;
-        PlayerInventory inventoryPlayer = player.getInventory();
+        PlayerInventory inventory = player.getInventory();
         for (int i = 0; i < PlayerInventory.getHotbarSize(); ++i) {
-            ItemStack slotItemStack = inventoryPlayer.main.get(i);
-            if (slotItemStack.getItem() == StartupCommon.ITEM_CAMERA.get()) {
+            ItemStack stack = inventory.main.get(i);
+            if (stack.getItem() == StartupCommon.ITEM_CAMERA.get()) {
                 foundCamera = true;
                 break;
             }
         }
         StartupClientOnly.menuItemCameraTransforms.changeMenuVisible(foundCamera);
 
-        BakedModel ibakedmodel = null;
+        BakedModel bakedModel = null;
         if (foundCamera) {
             ItemStack heldItemStack = player.getEquippedStack(EquipmentSlot.MAINHAND);
             if (heldItemStack.isEmpty()) {
                 heldItemStack = player.getEquippedStack(EquipmentSlot.OFFHAND);
             }
             if (!heldItemStack.isEmpty()) {
-                ibakedmodel =
-                        MinecraftClient.getInstance().getItemRenderer().getModels().getModel(heldItemStack);
+                bakedModel = MinecraftClient.getInstance().getItemRenderer().getModels().getModel(heldItemStack);
             }
         }
 
         ItemModelFlexibleCamera.UpdateLink link = StartupClientOnly.modelBakeEventHandler.getItemOverrideLink();
-        link.itemModelToOverride = ibakedmodel;
+        link.itemModelToOverride = bakedModel;
         link.forcedTransform = StartupClientOnly.menuItemCameraTransforms.getItemCameraTransforms();
     }
 

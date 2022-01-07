@@ -10,7 +10,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class MenuItemCameraTransformsImpl {
 
     private final HUDTextRenderer hudTextRenderer;
-
     private final MenuItemCameraTransforms.MenuKeyHandler menuKeyHandler;
 
     public MenuItemCameraTransformsImpl(HUDTextRenderer hudTextRenderer,

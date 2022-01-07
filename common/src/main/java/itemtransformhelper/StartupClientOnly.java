@@ -18,9 +18,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 public class StartupClientOnly {
 
     public static final ModelBakeEventHandler modelBakeEventHandler = new ModelBakeEventHandler();
-
     public static final ClientTickHandler clientTickHandler = new ClientTickHandler();
-
     public static final MenuItemCameraTransforms menuItemCameraTransforms = new MenuItemCameraTransforms();
 
     @ExpectPlatform

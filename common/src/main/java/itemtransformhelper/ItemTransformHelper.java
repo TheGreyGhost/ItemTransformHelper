@@ -9,4 +9,8 @@ public class ItemTransformHelper {
 
     public static final Logger logger = LogManager.getLogger(MODID);
 
+    public static void init() {
+        StartupCommon.init();
+    }
+
 }

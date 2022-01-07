@@ -1,8 +1,8 @@
 package itemtransformhelper.forge;
 
 import dev.architectury.platform.forge.EventBuses;
+import itemtransformhelper.ItemTransformHelper;
 import itemtransformhelper.StartupClientOnly;
-import itemtransformhelper.StartupCommon;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -24,7 +24,7 @@ public class ItemTransformHelperForge {
         // Register the doClientStuff method for modloading
         modEventBus.addListener(this::clientSetup);
 
-        StartupCommon.init();
+        ItemTransformHelper.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

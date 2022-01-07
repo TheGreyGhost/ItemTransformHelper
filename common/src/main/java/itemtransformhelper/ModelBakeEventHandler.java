@@ -30,9 +30,10 @@ public class ModelBakeEventHandler {
     public void modelBakeEvent(Map<Identifier, BakedModel> modelRegistry) {
         for (Identifier modelKey : modelRegistry.keySet()) {
             BakedModel bakedModel = modelRegistry.get(modelKey);
-            ItemModelFlexibleCamera wrappedModel = new ItemModelFlexibleCamera(bakedModel, itemOverrideLink);
+            ItemModelFlexibleCamera wrappedModel = ItemModelFlexibleCamera.create(bakedModel, itemOverrideLink);
             modelRegistry.put(modelKey, wrappedModel);
         }
+
         ItemTransformHelper.logger.warn("Warning - The Item Transform Helper replaces your BakedModels with a "
                 + "wrapped version, this");
         ItemTransformHelper.logger.warn("  is done even when the helper is not in your hotbar, and might cause "

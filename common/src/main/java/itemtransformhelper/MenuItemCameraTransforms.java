@@ -15,7 +15,7 @@ import org.lwjgl.glfw.GLFW;
 
 /**
  * The menu used to select and alter the different parts of the ItemCameraTransform for the currently selected item.
- * The menu state is rendered on the screen by HUDtextRenderer.
+ * The menu state is rendered on the screen by HUDTextRenderer.
  * The class registers its components on the Forge and FML event buses.
  * Created by TheGreyGhost on 22/01/15.
  */
@@ -23,14 +23,12 @@ public class MenuItemCameraTransforms {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private final HUDTextRenderer.HUDInfoUpdateLink linkToHUDrenderer;
-
-    private final MenuKeyHandler menuKeyHandler;
+    private final HUDTextRenderer.HUDInfoUpdateLink linkToHudRenderer;
 
     public MenuItemCameraTransforms() {
-        linkToHUDrenderer = new HUDTextRenderer.HUDInfoUpdateLink();
-        menuKeyHandler = new MenuKeyHandler(this.new KeyPressCallback());
-        registerListeners(new HUDTextRenderer(linkToHUDrenderer), menuKeyHandler);
+        linkToHudRenderer = new HUDTextRenderer.HUDInfoUpdateLink();
+        registerListeners(new HUDTextRenderer(linkToHudRenderer),
+                new MenuKeyHandler(this.new KeyPressCallback()));
     }
 
     @ExpectPlatform
@@ -44,7 +42,7 @@ public class MenuItemCameraTransforms {
      * @return the transform
      */
     public ModelTransformation getItemCameraTransforms() {
-        return linkToHUDrenderer.itemCameraTransforms;
+        return linkToHudRenderer.itemCameraTransforms;
     }
 
     /**
@@ -53,40 +51,36 @@ public class MenuItemCameraTransforms {
      * @param visible true = make visible
      */
     public void changeMenuVisible(boolean visible) {
-        linkToHUDrenderer.menuVisible = visible;
+        linkToHudRenderer.menuVisible = visible;
     }
 
     public class KeyPressCallback {
+
         void keyPressed(MenuKeyHandler.ArrowKeys whichKey) {
-            if (!linkToHUDrenderer.menuVisible) return;
+            if (!linkToHudRenderer.menuVisible) return;
 
             switch (whichKey) {
-            case DOWN:
-                linkToHUDrenderer.selectedField = linkToHUDrenderer.selectedField.getNextField();
-                break;
-            case UP:
-                linkToHUDrenderer.selectedField = linkToHUDrenderer.selectedField.getPreviousField();
-                break;
-            case RIGHT:
-            case LEFT:
-                alterField(whichKey == MenuKeyHandler.ArrowKeys.RIGHT);
-                break;
-            case NONE:
+            case DOWN -> linkToHudRenderer.selectedField = linkToHudRenderer.selectedField.getNextField();
+            case UP -> linkToHudRenderer.selectedField = linkToHudRenderer.selectedField.getPreviousField();
+            case RIGHT, LEFT -> alterField(whichKey == MenuKeyHandler.ArrowKeys.RIGHT);
+            default -> {
+            }
             }
         }
+
     }
 
     private void alterField(boolean increase) {
-        Transformation transformVec3f = getItemTransformRef(linkToHUDrenderer, linkToHUDrenderer.selectedTransform);
+        Transformation transformVec3f = getItemTransformRef(linkToHudRenderer, linkToHudRenderer.selectedTransform);
         if (transformVec3f == null) return; // should never happen
 
         final float SCALE_INCREMENT = 0.01F;
         final float ROTATION_INCREMENT = 2F;
         final float TRANSLATION_INCREMENT = 0.25F * 0.0625F; // 1/4 of a block, with multiplier from
-        // ItemTransformVec3f::deserialize0()
-        switch (linkToHUDrenderer.selectedField) {
-        case TRANSFORM -> linkToHUDrenderer.selectedTransform = increase ? linkToHUDrenderer.selectedTransform.getNext()
-                : linkToHUDrenderer.selectedTransform.getPrevious();
+        // Transformation.Deserializer::deserialize
+        switch (linkToHudRenderer.selectedField) {
+        case TRANSFORM -> linkToHudRenderer.selectedTransform = increase ? linkToHudRenderer.selectedTransform.getNext()
+                : linkToHudRenderer.selectedTransform.getPrevious();
         case SCALE_X -> transformVec3f.scale.add(increase ? SCALE_INCREMENT : -SCALE_INCREMENT, 0, 0);
         case SCALE_Y -> transformVec3f.scale.add(0, increase ? SCALE_INCREMENT : -SCALE_INCREMENT, 0);
         case SCALE_Z -> transformVec3f.scale.add(0, 0, increase ? SCALE_INCREMENT : -SCALE_INCREMENT);
@@ -117,12 +111,12 @@ public class MenuItemCameraTransforms {
             if (savedModel != null) {  // not sure why this would ever be null, but it was (in a bug report), so just
                 // check to make sure.
                 link.itemModelToOverride = null;
-                if (linkToHUDrenderer.selectedField == HUDTextRenderer.HUDInfoUpdateLink.SelectedField.RESTORE_DEFAULT) {
-                    copySingleTransform(linkToHUDrenderer, savedModel, linkToHUDrenderer.selectedTransform);
+                if (linkToHudRenderer.selectedField == HUDTextRenderer.HUDInfoUpdateLink.SelectedField.RESTORE_DEFAULT) {
+                    copySingleTransform(linkToHudRenderer, savedModel, linkToHudRenderer.selectedTransform);
                 } else {
                     for (HUDTextRenderer.HUDInfoUpdateLink.TransformName transformName
-                            : HUDTextRenderer.HUDInfoUpdateLink.TransformName.values()) {
-                        copySingleTransform(linkToHUDrenderer, savedModel, transformName);
+                            : HUDTextRenderer.HUDInfoUpdateLink.TransformName.VALUES) {
+                        copySingleTransform(linkToHudRenderer, savedModel, transformName);
                     }
                 }
             }
@@ -132,22 +126,22 @@ public class MenuItemCameraTransforms {
             StringBuilder output = new StringBuilder();
             output.append("\n\"display\": {\n");
             printTransform(output, "thirdperson_righthand",
-                    linkToHUDrenderer.itemCameraTransforms.thirdPersonRightHand);
+                    linkToHudRenderer.itemCameraTransforms.thirdPersonRightHand);
             output.append(",\n");
-            printTransform(output, "thirdperson_lefthand", linkToHUDrenderer.itemCameraTransforms.thirdPersonLeftHand);
+            printTransform(output, "thirdperson_lefthand", linkToHudRenderer.itemCameraTransforms.thirdPersonLeftHand);
             output.append(",\n");
             printTransform(output, "firstperson_righthand",
-                    linkToHUDrenderer.itemCameraTransforms.firstPersonRightHand);
+                    linkToHudRenderer.itemCameraTransforms.firstPersonRightHand);
             output.append(",\n");
-            printTransform(output, "firstperson_lefthand", linkToHUDrenderer.itemCameraTransforms.firstPersonLeftHand);
+            printTransform(output, "firstperson_lefthand", linkToHudRenderer.itemCameraTransforms.firstPersonLeftHand);
             output.append(",\n");
-            printTransform(output, "gui", linkToHUDrenderer.itemCameraTransforms.gui);
+            printTransform(output, "gui", linkToHudRenderer.itemCameraTransforms.gui);
             output.append(",\n");
-            printTransform(output, "head", linkToHUDrenderer.itemCameraTransforms.head);
+            printTransform(output, "head", linkToHudRenderer.itemCameraTransforms.head);
             output.append(",\n");
-            printTransform(output, "fixed", linkToHUDrenderer.itemCameraTransforms.fixed);
+            printTransform(output, "fixed", linkToHudRenderer.itemCameraTransforms.fixed);
             output.append(",\n");
-            printTransform(output, "ground", linkToHUDrenderer.itemCameraTransforms.ground);
+            printTransform(output, "ground", linkToHudRenderer.itemCameraTransforms.ground);
             output.append("\n}");
             LOGGER.info(output);
             LiteralText text = new LiteralText("\"display\" JSON section printed to console (LOGGER.info)...");
@@ -172,33 +166,31 @@ public class MenuItemCameraTransforms {
     }
 
     private void copySingleTransform(HUDTextRenderer.HUDInfoUpdateLink linkToHUDRenderer, BakedModel savedModel,
-                                     HUDTextRenderer.HUDInfoUpdateLink.TransformName transformToBeCopied
-    ) {
-        Transformation transformVec3f = getItemTransformRef(linkToHUDRenderer, transformToBeCopied);
+                                     HUDTextRenderer.HUDInfoUpdateLink.TransformName transformToBeCopied) {
+        Transformation transformation = getItemTransformRef(linkToHUDRenderer, transformToBeCopied);
         ModelTransformation.Mode currentType = transformToBeCopied.getVanillaTransformType();
         Transformation transform = savedModel.getTransformation().getTransformation(currentType);
-        copyTransforms(transform, transformVec3f);
+        copyTransforms(transform, transformation);
     }
 
-    private static void printTransform(StringBuilder output, String transformView, Transformation itemTransformVec3f) {
+    private static void printTransform(StringBuilder output, String transformView, Transformation transformation) {
         output.append("    \"").append(transformView).append("\": {\n");
         output.append("        \"rotation\": [ ");
-        output.append(String.format(Locale.US, "%.0f, ", itemTransformVec3f.rotation.getX()));
-        output.append(String.format(Locale.US, "%.0f, ", itemTransformVec3f.rotation.getY()));
-        output.append(String.format(Locale.US, "%.0f ],", itemTransformVec3f.rotation.getZ()));
+        output.append(String.format(Locale.US, "%.0f, ", transformation.rotation.getX()));
+        output.append(String.format(Locale.US, "%.0f, ", transformation.rotation.getY()));
+        output.append(String.format(Locale.US, "%.0f ],", transformation.rotation.getZ()));
         output.append("\n");
 
-        final double TRANSLATE_MULTIPLIER = 1 / 0.0625;   // see ItemTransformVec3f::deserialize0()
+        final double TRANSLATE_MULTIPLIER = 1 / 0.0625;   // see Transformation.Deserializer::deserialize
         output.append("        \"translation\": [ ");
-        output.append(String.format(Locale.US, "%.2f, ", itemTransformVec3f.translation.getX() * TRANSLATE_MULTIPLIER));
-        output.append(String.format(Locale.US, "%.2f, ", itemTransformVec3f.translation.getY() * TRANSLATE_MULTIPLIER));
-        output.append(String.format(Locale.US, "%.2f ],",
-                itemTransformVec3f.translation.getZ() * TRANSLATE_MULTIPLIER));
+        output.append(String.format(Locale.US, "%.2f, ", transformation.translation.getX() * TRANSLATE_MULTIPLIER));
+        output.append(String.format(Locale.US, "%.2f, ", transformation.translation.getY() * TRANSLATE_MULTIPLIER));
+        output.append(String.format(Locale.US, "%.2f ],", transformation.translation.getZ() * TRANSLATE_MULTIPLIER));
         output.append("\n");
         output.append("        \"scale\": [ ");
-        output.append(String.format(Locale.US, "%.2f, ", itemTransformVec3f.scale.getX()));
-        output.append(String.format(Locale.US, "%.2f, ", itemTransformVec3f.scale.getY()));
-        output.append(String.format(Locale.US, "%.2f ]", itemTransformVec3f.scale.getZ()));
+        output.append(String.format(Locale.US, "%.2f, ", transformation.scale.getX()));
+        output.append(String.format(Locale.US, "%.2f, ", transformation.scale.getY()));
+        output.append(String.format(Locale.US, "%.2f ]", transformation.scale.getZ()));
         output.append("\n    }");
     }
 
@@ -213,11 +205,9 @@ public class MenuItemCameraTransforms {
      */
     public static class MenuKeyHandler {
 
-        private long keyDownTimeTicks = 0;
-
-        private ArrowKeys lastKey = ArrowKeys.NONE;
-
         private final KeyPressCallback keyPressCallback;
+        private long keyDownTimeTicks = 0;
+        private ArrowKeys lastKey = ArrowKeys.NONE;
 
         public MenuKeyHandler(KeyPressCallback keyPressCallback) {
             this.keyPressCallback = keyPressCallback;
@@ -250,6 +240,7 @@ public class MenuItemCameraTransforms {
         }
 
         public enum ArrowKeys {NONE, UP, DOWN, LEFT, RIGHT}
+
     }
 
 }

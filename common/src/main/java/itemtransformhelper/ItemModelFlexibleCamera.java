@@ -1,6 +1,7 @@
 package itemtransformhelper;
 
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.block.BlockState;
@@ -27,15 +28,19 @@ import org.jetbrains.annotations.Nullable;
  * <p>
  * NB Starting with Forge 1.8-11.14.4.1563, it appears that all items now implement IPerspectiveAwareModel
  */
-public class ItemModelFlexibleCamera implements BakedModel {
+public abstract class ItemModelFlexibleCamera implements BakedModel {
 
     protected final BakedModel originalModel;
-
     protected final UpdateLink updateLink;
 
-    public ItemModelFlexibleCamera(BakedModel originalModel, UpdateLink updateLink) {
+    protected ItemModelFlexibleCamera(BakedModel originalModel, UpdateLink updateLink) {
         this.originalModel = originalModel;
         this.updateLink = updateLink;
+    }
+
+    @ExpectPlatform
+    public static ItemModelFlexibleCamera create(BakedModel originalModel, UpdateLink updateLink) {
+        throw new UnsupportedOperationException();
     }
 
     @NotNull
@@ -45,23 +50,6 @@ public class ItemModelFlexibleCamera implements BakedModel {
                 ? updateLink.forcedTransform
                 : originalModel.getTransformation();
     }
-
-    /* TODO This does not seem to be needed. Remove if this is really the case. Otherwise implement it somehow...
-    @NotNull
-    @Override
-    public BakedModel handlePerspective(@NotNull ModelTransformation.Mode cameraTransformType,
-                                        @NotNull MatrixStack poseStack) {
-        if (updateLink.itemModelToOverride == this) {
-            AffineTransformation tr =
-                    TransformationHelper.toTransformation(getTransformation().getTransformation(cameraTransformType));
-            if (!tr.isIdentity()) {
-                tr.push(poseStack);
-            }
-            return this;
-        } else {
-            return super.handlePerspective(cameraTransformType, poseStack);
-        }
-    }*/
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
