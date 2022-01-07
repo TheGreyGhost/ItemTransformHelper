@@ -7,7 +7,7 @@ license = "All rights reserved"
 modId = "itemtransformhelper"
 version = "${version}"
 displayName = "Item Transform Helper"
-authors = "TGG, Romejanic, lehjr, ThexXTURBOXx"
+authors = "TGG, ThexXTURBOXx, Romejanic, lehjr"
 description = '''
 Interactively change the position, scale, and rotation of an item.
 '''
