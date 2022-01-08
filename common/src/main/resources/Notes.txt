@@ -1,5 +1,5 @@
 Item Transform Helper
-==================
+
 When you create a custom item, you need to provide ItemCameraTransforms for it. This project is an interactive
   tool to help you get the transforms right by interactively adjusting them.
 
@@ -29,14 +29,3 @@ For background information on
 - Rendering items: see here https://greyminecraftcoder.blogspot.com/2014/12/item-rendering-18.html
 - This link describes the structure of the JSON Item Model file (see the Item Models section halfway down):
    https://minecraft.fandom.com/wiki/Model#Item_models
-
-As an alternative to the Item Transform Helper, you can also use BlockBench (https://blockbench.net/) to determine the correct transforms for your model, i.e. either
-1) Create a new model in BlockBench; or
-2) Import an existing model (either the json model file, or the item "generated" texture)
-
-Thanks to ThexXTURBOXx for updating to 1.11.2 and Architectury (Forge + Fabric) 1.18.1, Romejanic for updating to 1.12.2, and to lehrj for updating to 1.16.1!
-
---------------
-Licence Info
-
-See here: https://github.com/TheGreyGhost/ItemTransformHelper/blob/master/LICENSE

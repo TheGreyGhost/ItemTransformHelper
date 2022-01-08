@@ -1,0 +1,34 @@
+modLoader = "javafml"
+loaderVersion = "[39,)"
+issueTrackerURL = "https://github.com/TheGreyGhost/ItemTransformHelper"
+license = "All rights reserved"
+
+[[mods]]
+modId = "itemtransformhelper"
+version = "${version}"
+displayName = "Item Transform Helper"
+authors = "TGG, ThexXTURBOXx, Romejanic, lehjr"
+description = '''
+Interactively change the position, scale, and rotation of an item.
+'''
+
+[[dependencies.itemtransformhelper]]
+modId = "forge"
+mandatory = true
+versionRange = "[39,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.itemtransformhelper]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.itemtransformhelper]]
+modId = "architectury"
+mandatory = true
+versionRange = "[3.4.9,)"
+ordering = "AFTER"
+side = "BOTH"

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "itemtransformhelper",
+  "version": "${version}",
+  "name": "Item Transform Helper",
+  "description": "Interactively change the position, scale, and rotation of an item.",
+  "authors": [
+    "TGG",
+    "ThexXTURBOXx",
+    "Romejanic",
+    "lehjr"
+  ],
+  "contact": {
+    "homepage": "https://www.planetminecraft.com/mod/item-transform-helper---interactively-rotate-scale-translate/",
+    "sources": "https://github.com/TheGreyGhost/ItemTransformHelper",
+    "issues": "https://github.com/TheGreyGhost/ItemTransformHelper/issues"
+  },
+  "license": "All rights reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "itemtransformhelper.fabric.ItemTransformHelperFabric"
+    ]
+  },
+  "mixins": [
+    "itemtransformhelper.mixins.json"
+  ],
+  "depends": {
+    "minecraft": ">=1.18.1",
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "architectury": ">=3.4.9"
+  }
+}
