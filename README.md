@@ -36,6 +36,10 @@ As an alternative to the Item Transform Helper, you can also use BlockBench (htt
 
 Thanks to Romejanic for updating to 1.12.2, and to lehrj for updating to 1.16.1!
 
+## Versions after 1.16.1
+At the moment I haven't updated beyond 1.16.1 but ThexXTURBOXx has created versions for 1.16.5, 1.17 and 1.18, and also added support for Fabric (a simpler alternative to Forge).  You can find his repo and the releases here:  https://github.com/ThexXTURBOXx/ItemTransformHelper
+
+
 ## Licence Info:
 This is free and unencumbered software released into the public domain.
 
