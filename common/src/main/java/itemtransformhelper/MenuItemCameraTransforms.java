@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.Transformation;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -144,7 +144,7 @@ public class MenuItemCameraTransforms {
             printTransform(output, "ground", linkToHudRenderer.itemCameraTransforms.ground);
             output.append("\n}");
             LOGGER.info(output);
-            LiteralText text = new LiteralText("\"display\" JSON section printed to console (LOGGER.info)...");
+            Text text = Text.literal("\"display\" JSON section printed to console (LOGGER.info)...");
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(text);
         }
         }

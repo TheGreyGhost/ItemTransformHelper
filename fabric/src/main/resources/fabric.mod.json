@@ -26,9 +26,9 @@
     "itemtransformhelper.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.18.2",
-    "fabricloader": ">=0.13.3",
+    "minecraft": ">=1.19",
+    "fabricloader": ">=0.14.6",
     "fabric": "*",
-    "architectury": ">=4.1.32"
+    "architectury": ">=5.4.15"
   }
 }

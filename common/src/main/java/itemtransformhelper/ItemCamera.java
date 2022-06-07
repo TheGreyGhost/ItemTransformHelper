@@ -4,7 +4,6 @@ import java.util.List;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -23,10 +22,10 @@ public class ItemCamera extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(new LiteralText("1) Place the camera in your hotbar"));
-        tooltip.add(new LiteralText("2) Hold an item in your hand"));
-        tooltip.add(new LiteralText("3) Use the cursor keys to"));
-        tooltip.add(new LiteralText("   modify the item transform."));
+        tooltip.add(Text.literal("1) Place the camera in your hotbar"));
+        tooltip.add(Text.literal("2) Hold an item in your hand"));
+        tooltip.add(Text.literal("3) Use the cursor keys to"));
+        tooltip.add(Text.literal("   modify the item transform."));
     }
 
 }
