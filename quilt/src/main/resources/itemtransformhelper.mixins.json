@@ -1,7 +1,6 @@
 {
   "required": true,
-  "minVersion": "0.8",
-  "package": "itemtransformhelper.fabric.mixin",
+  "package": "itemtransformhelper.quilt.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
     "GuiMixin",
@@ -9,7 +8,6 @@
     "ModelManagerMixin"
   ],
   "mixins": [],
-  "server": [],
   "injectors": {
     "defaultRequire": 1
   }

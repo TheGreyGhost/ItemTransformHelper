@@ -10,7 +10,7 @@ public class ItemModelFlexibleCameraImpl extends ItemModelFlexibleCamera {
     }
 
     public static ItemModelFlexibleCamera create(BakedModel originalModel,
-                                                 ItemModelFlexibleCamera.UpdateLink updateLink) {
+                                                 UpdateLink updateLink) {
         return new ItemModelFlexibleCameraImpl(originalModel, updateLink);
     }
 

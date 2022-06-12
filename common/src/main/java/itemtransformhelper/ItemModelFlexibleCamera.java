@@ -3,14 +3,14 @@ package itemtransformhelper;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import java.util.List;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,14 +45,14 @@ public abstract class ItemModelFlexibleCamera implements BakedModel {
 
     @NotNull
     @Override
-    public ModelTransformation getTransformation() {
+    public ItemTransforms getTransforms() {
         return (updateLink.itemModelToOverride == this)
                 ? updateLink.forcedTransform
-                : originalModel.getTransformation();
+                : originalModel.getTransforms();
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
         return originalModel.getQuads(state, side, rand);
     }
 
@@ -62,27 +62,27 @@ public abstract class ItemModelFlexibleCamera implements BakedModel {
     }
 
     @Override
-    public boolean hasDepth() {
-        return originalModel.hasDepth();
+    public boolean isGui3d() {
+        return originalModel.isGui3d();
     }
 
     @Override
-    public boolean isSideLit() {
-        return originalModel.isSideLit();
+    public boolean usesBlockLight() {
+        return originalModel.usesBlockLight();
     }
 
     @Override
-    public boolean isBuiltin() {
-        return originalModel.isBuiltin();
+    public boolean isCustomRenderer() {
+        return originalModel.isCustomRenderer();
     }
 
     @Override
-    public Sprite getParticleSprite() {
-        return originalModel.getParticleSprite();
+    public TextureAtlasSprite getParticleIcon() {
+        return originalModel.getParticleIcon();
     }
 
     @Override
-    public ModelOverrideList getOverrides() {
+    public ItemOverrides getOverrides() {
         return originalModel.getOverrides();
     }
 
@@ -90,7 +90,7 @@ public abstract class ItemModelFlexibleCamera implements BakedModel {
 
         public BakedModel itemModelToOverride;
 
-        public ModelTransformation forcedTransform;
+        public ItemTransforms forcedTransform;
 
     }
 

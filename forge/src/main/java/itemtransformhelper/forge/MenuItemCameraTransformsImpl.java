@@ -25,7 +25,7 @@ public class MenuItemCameraTransformsImpl {
 
     @SubscribeEvent
     public void displayHUDText(RenderGameOverlayEvent.Text event) {
-        hudTextRenderer.displayHUDText(event.getMatrixStack());
+        hudTextRenderer.displayHUDText(event.getPoseStack());
     }
 
     @SubscribeEvent

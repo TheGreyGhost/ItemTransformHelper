@@ -1,11 +1,12 @@
 package itemtransformhelper;
 
 import java.util.List;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,15 +18,16 @@ import org.jetbrains.annotations.Nullable;
 public class ItemCamera extends Item {
 
     public ItemCamera() {
-        super(new Settings().maxCount(1).group(StartupCommon.ITH_ITEM_GROUP));
+        super(new Properties().stacksTo(1).tab(StartupCommon.ITH_ITEM_GROUP));
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.literal("1) Place the camera in your hotbar"));
-        tooltip.add(Text.literal("2) Hold an item in your hand"));
-        tooltip.add(Text.literal("3) Use the cursor keys to"));
-        tooltip.add(Text.literal("   modify the item transform."));
+    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, List<Component> list,
+                                @NotNull TooltipFlag tooltipFlag) {
+        list.add(Component.literal("1) Place the camera in your hotbar"));
+        list.add(Component.literal("2) Hold an item in your hand"));
+        list.add(Component.literal("3) Use the cursor keys to"));
+        list.add(Component.literal("   modify the item transform."));
     }
 
 }

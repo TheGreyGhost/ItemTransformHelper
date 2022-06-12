@@ -1,10 +1,10 @@
 package itemtransformhelper;
 
 import java.util.Map;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.render.model.json.Transformation;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.model.ItemTransform;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * User: The Grey Ghost
@@ -20,15 +20,15 @@ public class ModelBakeEventHandler {
     private final ItemModelFlexibleCamera.UpdateLink itemOverrideLink = new ItemModelFlexibleCamera.UpdateLink();
 
     public ModelBakeEventHandler() {
-        itemOverrideLink.forcedTransform = new ModelTransformation(
-                Transformation.IDENTITY, Transformation.IDENTITY,
-                Transformation.IDENTITY, Transformation.IDENTITY,
-                Transformation.IDENTITY, Transformation.IDENTITY,
-                Transformation.IDENTITY, Transformation.IDENTITY);
+        itemOverrideLink.forcedTransform = new ItemTransforms(
+                ItemTransform.NO_TRANSFORM, ItemTransform.NO_TRANSFORM,
+                ItemTransform.NO_TRANSFORM, ItemTransform.NO_TRANSFORM,
+                ItemTransform.NO_TRANSFORM, ItemTransform.NO_TRANSFORM,
+                ItemTransform.NO_TRANSFORM, ItemTransform.NO_TRANSFORM);
     }
 
-    public void modelBakeEvent(Map<Identifier, BakedModel> modelRegistry) {
-        for (Identifier modelKey : modelRegistry.keySet()) {
+    public void modelBakeEvent(Map<ResourceLocation, BakedModel> modelRegistry) {
+        for (ResourceLocation modelKey : modelRegistry.keySet()) {
             BakedModel bakedModel = modelRegistry.get(modelKey);
             ItemModelFlexibleCamera wrappedModel = ItemModelFlexibleCamera.create(bakedModel, itemOverrideLink);
             modelRegistry.put(modelKey, wrappedModel);

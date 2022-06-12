@@ -2,12 +2,12 @@ package itemtransformhelper;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import java.util.Locale;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.render.model.json.Transformation;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ItemTransform;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -41,7 +41,7 @@ public class MenuItemCameraTransforms {
      *
      * @return the transform
      */
-    public ModelTransformation getItemCameraTransforms() {
+    public ItemTransforms getItemCameraTransforms() {
         return linkToHudRenderer.itemCameraTransforms;
     }
 
@@ -71,7 +71,7 @@ public class MenuItemCameraTransforms {
     }
 
     private void alterField(boolean increase) {
-        Transformation transformVec3f = getItemTransformRef(linkToHudRenderer, linkToHudRenderer.selectedTransform);
+        ItemTransform transformVec3f = getItemTransformRef(linkToHudRenderer, linkToHudRenderer.selectedTransform);
         if (transformVec3f == null) return; // should never happen
 
         final float SCALE_INCREMENT = 0.01F;
@@ -85,19 +85,19 @@ public class MenuItemCameraTransforms {
         case SCALE_Y -> transformVec3f.scale.add(0, increase ? SCALE_INCREMENT : -SCALE_INCREMENT, 0);
         case SCALE_Z -> transformVec3f.scale.add(0, 0, increase ? SCALE_INCREMENT : -SCALE_INCREMENT);
         case ROTATE_X -> {
-            float newAngle = transformVec3f.rotation.getX() + (increase ? ROTATION_INCREMENT : -ROTATION_INCREMENT);
-            newAngle = MathHelper.wrapDegrees(newAngle - 180) + 180;
-            transformVec3f.rotation.set(newAngle, transformVec3f.rotation.getY(), transformVec3f.rotation.getZ());
+            float newAngle = transformVec3f.rotation.x() + (increase ? ROTATION_INCREMENT : -ROTATION_INCREMENT);
+            newAngle = Mth.wrapDegrees(newAngle - 180) + 180;
+            transformVec3f.rotation.set(newAngle, transformVec3f.rotation.y(), transformVec3f.rotation.z());
         }
         case ROTATE_Y -> {
-            float newAngle = transformVec3f.rotation.getY() + (increase ? ROTATION_INCREMENT : -ROTATION_INCREMENT);
-            newAngle = MathHelper.wrapDegrees(newAngle - 180) + 180;
-            transformVec3f.rotation.set(transformVec3f.rotation.getX(), newAngle, transformVec3f.rotation.getZ());
+            float newAngle = transformVec3f.rotation.y() + (increase ? ROTATION_INCREMENT : -ROTATION_INCREMENT);
+            newAngle = Mth.wrapDegrees(newAngle - 180) + 180;
+            transformVec3f.rotation.set(transformVec3f.rotation.x(), newAngle, transformVec3f.rotation.z());
         }
         case ROTATE_Z -> {
-            float newAngle = transformVec3f.rotation.getZ() + (increase ? ROTATION_INCREMENT : -ROTATION_INCREMENT);
-            newAngle = MathHelper.wrapDegrees(newAngle - 180) + 180;
-            transformVec3f.rotation.set(transformVec3f.rotation.getX(), transformVec3f.rotation.getY(), newAngle);
+            float newAngle = transformVec3f.rotation.z() + (increase ? ROTATION_INCREMENT : -ROTATION_INCREMENT);
+            newAngle = Mth.wrapDegrees(newAngle - 180) + 180;
+            transformVec3f.rotation.set(transformVec3f.rotation.x(), transformVec3f.rotation.y(), newAngle);
         }
         case TRANSLATE_X -> transformVec3f.translation
                 .add(increase ? TRANSLATION_INCREMENT : -TRANSLATION_INCREMENT, 0, 0);
@@ -144,15 +144,15 @@ public class MenuItemCameraTransforms {
             printTransform(output, "ground", linkToHudRenderer.itemCameraTransforms.ground);
             output.append("\n}");
             LOGGER.info(output);
-            Text text = Text.literal("\"display\" JSON section printed to console (LOGGER.info)...");
-            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(text);
+            Component text = Component.literal("\"display\" JSON section printed to console (LOGGER.info)...");
+            Minecraft.getInstance().gui.getChat().addMessage(text);
         }
         }
     }
 
     // points to the appropriate transform based on which transform has been selected.
-    private static Transformation getItemTransformRef(HUDTextRenderer.HUDInfoUpdateLink linkToHUDRenderer,
-                                                      HUDTextRenderer.HUDInfoUpdateLink.TransformName transformName) {
+    private static ItemTransform getItemTransformRef(HUDTextRenderer.HUDInfoUpdateLink linkToHUDRenderer,
+                                                     HUDTextRenderer.HUDInfoUpdateLink.TransformName transformName) {
         return switch (transformName) {
             case THIRD_LEFT -> linkToHUDRenderer.itemCameraTransforms.thirdPersonLeftHand;
             case THIRD_RIGHT -> linkToHUDRenderer.itemCameraTransforms.thirdPersonRightHand;
@@ -167,37 +167,37 @@ public class MenuItemCameraTransforms {
 
     private void copySingleTransform(HUDTextRenderer.HUDInfoUpdateLink linkToHUDRenderer, BakedModel savedModel,
                                      HUDTextRenderer.HUDInfoUpdateLink.TransformName transformToBeCopied) {
-        Transformation transformation = getItemTransformRef(linkToHUDRenderer, transformToBeCopied);
-        ModelTransformation.Mode currentType = transformToBeCopied.getVanillaTransformType();
-        Transformation transform = savedModel.getTransformation().getTransformation(currentType);
+        ItemTransform transformation = getItemTransformRef(linkToHUDRenderer, transformToBeCopied);
+        ItemTransforms.TransformType currentType = transformToBeCopied.getVanillaTransformType();
+        ItemTransform transform = savedModel.getTransforms().getTransform(currentType);
         copyTransforms(transform, transformation);
     }
 
-    private static void printTransform(StringBuilder output, String transformView, Transformation transformation) {
+    private static void printTransform(StringBuilder output, String transformView, ItemTransform transformation) {
         output.append("    \"").append(transformView).append("\": {\n");
         output.append("        \"rotation\": [ ");
-        output.append(String.format(Locale.US, "%.0f, ", transformation.rotation.getX()));
-        output.append(String.format(Locale.US, "%.0f, ", transformation.rotation.getY()));
-        output.append(String.format(Locale.US, "%.0f ],", transformation.rotation.getZ()));
+        output.append(String.format(Locale.US, "%.0f, ", transformation.rotation.x()));
+        output.append(String.format(Locale.US, "%.0f, ", transformation.rotation.y()));
+        output.append(String.format(Locale.US, "%.0f ],", transformation.rotation.z()));
         output.append("\n");
 
         final double TRANSLATE_MULTIPLIER = 1 / 0.0625;   // see Transformation.Deserializer::deserialize
         output.append("        \"translation\": [ ");
-        output.append(String.format(Locale.US, "%.2f, ", transformation.translation.getX() * TRANSLATE_MULTIPLIER));
-        output.append(String.format(Locale.US, "%.2f, ", transformation.translation.getY() * TRANSLATE_MULTIPLIER));
-        output.append(String.format(Locale.US, "%.2f ],", transformation.translation.getZ() * TRANSLATE_MULTIPLIER));
+        output.append(String.format(Locale.US, "%.2f, ", transformation.translation.x() * TRANSLATE_MULTIPLIER));
+        output.append(String.format(Locale.US, "%.2f, ", transformation.translation.y() * TRANSLATE_MULTIPLIER));
+        output.append(String.format(Locale.US, "%.2f ],", transformation.translation.z() * TRANSLATE_MULTIPLIER));
         output.append("\n");
         output.append("        \"scale\": [ ");
-        output.append(String.format(Locale.US, "%.2f, ", transformation.scale.getX()));
-        output.append(String.format(Locale.US, "%.2f, ", transformation.scale.getY()));
-        output.append(String.format(Locale.US, "%.2f ]", transformation.scale.getZ()));
+        output.append(String.format(Locale.US, "%.2f, ", transformation.scale.x()));
+        output.append(String.format(Locale.US, "%.2f, ", transformation.scale.y()));
+        output.append(String.format(Locale.US, "%.2f ]", transformation.scale.z()));
         output.append("\n    }");
     }
 
-    private static void copyTransforms(Transformation from, Transformation to) {
-        to.translation.set(from.translation);
-        to.scale.set(from.scale);
-        to.rotation.set(from.rotation);
+    private static void copyTransforms(ItemTransform from, ItemTransform to) {
+        to.translation.load(from.translation);
+        to.scale.load(from.scale);
+        to.rotation.load(from.rotation);
     }
 
     /**
@@ -236,7 +236,7 @@ public class MenuItemCameraTransforms {
         }
 
         static boolean isKeyDown(int key) {
-            return GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(), key) == GLFW.GLFW_PRESS;
+            return GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), key) == GLFW.GLFW_PRESS;
         }
 
         public enum ArrowKeys {NONE, UP, DOWN, LEFT, RIGHT}

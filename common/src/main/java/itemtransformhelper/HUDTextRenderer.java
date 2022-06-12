@@ -1,13 +1,13 @@
 package itemtransformhelper;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import java.util.ArrayList;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.render.model.json.Transformation;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.block.model.ItemTransform;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 
 /**
  * User: The Grey Ghost
@@ -37,7 +37,7 @@ public class HUDTextRenderer {
      * Draw the Head Up Display menu on screen.
      * The information is taken from the hudInfoUpdateLink which is updated by other classes.
      */
-    public void displayHUDText(MatrixStack matrixStack) {
+    public void displayHUDText(PoseStack poseStack) {
         if (hudInfoUpdateLink == null || !hudInfoUpdateLink.menuVisible || hudInfoUpdateLink.itemCameraTransforms == null)
             return;
         ArrayList<String> displayText = new ArrayList<>();
@@ -47,7 +47,7 @@ public class HUDTextRenderer {
         selectableField.add(NOT_SELECTABLE);
         displayText.add("VIEW  ");
         selectableField.add(NOT_SELECTABLE);
-        Transformation transformation;
+        ItemTransform transformation;
 
         switch (hudInfoUpdateLink.selectedTransform) {
         case THIRD_LEFT -> {
@@ -82,7 +82,8 @@ public class HUDTextRenderer {
             displayText.add("grnd");
             transformation = hudInfoUpdateLink.itemCameraTransforms.ground;
         }
-        default -> throw new IllegalArgumentException("Unknown cameraTransformType:" + hudInfoUpdateLink.selectedTransform);
+        default ->
+                throw new IllegalArgumentException("Unknown cameraTransformType:" + hudInfoUpdateLink.selectedTransform);
         }
         selectableField.add(HUDInfoUpdateLink.SelectedField.TRANSFORM);
 
@@ -90,22 +91,22 @@ public class HUDTextRenderer {
         selectableField.add(NOT_SELECTABLE);
         displayText.add("SCALE");
         selectableField.add(NOT_SELECTABLE);
-        displayText.add("X:" + String.format("%.2f", transformation.scale.getX()));
+        displayText.add("X:" + String.format("%.2f", transformation.scale.x()));
         selectableField.add(HUDInfoUpdateLink.SelectedField.SCALE_X);
-        displayText.add("Y:" + String.format("%.2f", transformation.scale.getY()));
+        displayText.add("Y:" + String.format("%.2f", transformation.scale.y()));
         selectableField.add(HUDInfoUpdateLink.SelectedField.SCALE_Y);
-        displayText.add("Z:" + String.format("%.2f", transformation.scale.getZ()));
+        displayText.add("Z:" + String.format("%.2f", transformation.scale.z()));
         selectableField.add(HUDInfoUpdateLink.SelectedField.SCALE_Z);
 
         displayText.add("======");
         selectableField.add(NOT_SELECTABLE);
         displayText.add("ROTATE");
         selectableField.add(NOT_SELECTABLE);
-        displayText.add("X:" + String.format("%3.0f", transformation.rotation.getX()));
+        displayText.add("X:" + String.format("%3.0f", transformation.rotation.x()));
         selectableField.add(HUDInfoUpdateLink.SelectedField.ROTATE_X);
-        displayText.add("Y:" + String.format("%3.0f", transformation.rotation.getY()));
+        displayText.add("Y:" + String.format("%3.0f", transformation.rotation.y()));
         selectableField.add(HUDInfoUpdateLink.SelectedField.ROTATE_Y);
-        displayText.add("Z:" + String.format("%3.0f", transformation.rotation.getZ()));
+        displayText.add("Z:" + String.format("%3.0f", transformation.rotation.z()));
         selectableField.add(HUDInfoUpdateLink.SelectedField.ROTATE_Z);
 
         final double TRANSLATE_MULTIPLIER = 1 / 0.0625;   // see Transformation.Deserializer::deserialize
@@ -113,11 +114,11 @@ public class HUDTextRenderer {
         selectableField.add(NOT_SELECTABLE);
         displayText.add("TRANSL");
         selectableField.add(NOT_SELECTABLE);
-        displayText.add("X:" + String.format("%.2f", transformation.translation.getX() * TRANSLATE_MULTIPLIER));
+        displayText.add("X:" + String.format("%.2f", transformation.translation.x() * TRANSLATE_MULTIPLIER));
         selectableField.add(HUDInfoUpdateLink.SelectedField.TRANSLATE_X);
-        displayText.add("Y:" + String.format("%.2f", transformation.translation.getY() * TRANSLATE_MULTIPLIER));
+        displayText.add("Y:" + String.format("%.2f", transformation.translation.y() * TRANSLATE_MULTIPLIER));
         selectableField.add(HUDInfoUpdateLink.SelectedField.TRANSLATE_Y);
-        displayText.add("Z:" + String.format("%.2f", transformation.translation.getZ() * TRANSLATE_MULTIPLIER));
+        displayText.add("Z:" + String.format("%.2f", transformation.translation.z() * TRANSLATE_MULTIPLIER));
         selectableField.add(HUDInfoUpdateLink.SelectedField.TRANSLATE_Z);
 
         displayText.add("======");
@@ -131,19 +132,19 @@ public class HUDTextRenderer {
         displayText.add("======");
         selectableField.add(NOT_SELECTABLE);
 
-        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+        Font textRenderer = Minecraft.getInstance().font;
         int yPos = 2;
         int xPos = 2;
         for (int i = 0; i < displayText.size(); ++i) {
             String msg = displayText.get(i);
-            yPos += textRenderer.fontHeight;
+            yPos += textRenderer.lineHeight;
             if (msg == null) continue;
             boolean fieldIsSelected = hudInfoUpdateLink.selectedField == selectableField.get(i);
             int highlightColour = fieldIsSelected ? GREEN_HALF_TRANSPARENT : MED_GRAY_HALF_TRANSPARENT;
-            DrawableHelper.fill(matrixStack, xPos - 1, yPos - 1,
-                    xPos + textRenderer.getWidth(msg) + 1, yPos + textRenderer.fontHeight - 1, highlightColour);
+            GuiComponent.fill(poseStack, xPos - 1, yPos - 1,
+                    xPos + textRenderer.width(msg) + 1, yPos + textRenderer.lineHeight - 1, highlightColour);
             int stringColour = fieldIsSelected ? BLACK : LIGHT_GRAY;
-            textRenderer.draw(matrixStack, msg, xPos, yPos, stringColour);
+            textRenderer.draw(poseStack, msg, xPos, yPos, stringColour);
         }
     }
 
@@ -152,25 +153,25 @@ public class HUDTextRenderer {
      */
     public static class HUDInfoUpdateLink {
 
-        private static final Vec3f ROTATION_DEFAULT = new Vec3f(0.0F, 0.0F, 0.0F);
-        private static final Vec3f TRANSLATION_DEFAULT = new Vec3f(0.0F, 0.0F, 0.0F);
-        private static final Vec3f SCALE_DEFAULT = new Vec3f(1.0F, 1.0F, 1.0F);
+        private static final Vector3f ROTATION_DEFAULT = new Vector3f(0.0F, 0.0F, 0.0F);
+        private static final Vector3f TRANSLATION_DEFAULT = new Vector3f(0.0F, 0.0F, 0.0F);
+        private static final Vector3f SCALE_DEFAULT = new Vector3f(1.0F, 1.0F, 1.0F);
 
-        public ModelTransformation itemCameraTransforms;
+        public ItemTransforms itemCameraTransforms;
         public SelectedField selectedField;
         public TransformName selectedTransform;
         public boolean menuVisible;
 
         public HUDInfoUpdateLink() {
-            Transformation trThirdLeft = new Transformation(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
-            Transformation trThirdRight = new Transformation(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
-            Transformation trFirstLeft = new Transformation(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
-            Transformation trFirstRight = new Transformation(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
-            Transformation trHead = new Transformation(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
-            Transformation trGui = new Transformation(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
-            Transformation trGround = new Transformation(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
-            Transformation trFixed = new Transformation(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
-            itemCameraTransforms = new ModelTransformation(trThirdLeft, trThirdRight, trFirstLeft, trFirstRight,
+            ItemTransform trThirdLeft = new ItemTransform(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+            ItemTransform trThirdRight = new ItemTransform(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+            ItemTransform trFirstLeft = new ItemTransform(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+            ItemTransform trFirstRight = new ItemTransform(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+            ItemTransform trHead = new ItemTransform(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+            ItemTransform trGui = new ItemTransform(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+            ItemTransform trGround = new ItemTransform(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+            ItemTransform trFixed = new ItemTransform(ROTATION_DEFAULT, TRANSLATION_DEFAULT, SCALE_DEFAULT);
+            itemCameraTransforms = new ItemTransforms(trThirdLeft, trThirdRight, trFirstLeft, trFirstRight,
                     trHead, trGui, trGround, trFixed);
 
             selectedField = SelectedField.TRANSFORM;
@@ -180,18 +181,18 @@ public class HUDTextRenderer {
 
         public enum TransformName {
 
-            THIRD_LEFT(ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND),
-            THIRD_RIGHT(ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND),
-            FIRST_LEFT(ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND),
-            FIRST_RIGHT(ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND),
-            HEAD(ModelTransformation.Mode.HEAD),
-            GUI(ModelTransformation.Mode.GUI),
-            GROUND(ModelTransformation.Mode.GROUND),
-            FIXED(ModelTransformation.Mode.FIXED);
+            THIRD_LEFT(ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND),
+            THIRD_RIGHT(ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND),
+            FIRST_LEFT(ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND),
+            FIRST_RIGHT(ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND),
+            HEAD(ItemTransforms.TransformType.HEAD),
+            GUI(ItemTransforms.TransformType.GUI),
+            GROUND(ItemTransforms.TransformType.GROUND),
+            FIXED(ItemTransforms.TransformType.FIXED);
 
             public static final TransformName[] VALUES = TransformName.values();
 
-            private final ModelTransformation.Mode vanillaType;
+            private final ItemTransforms.TransformType vanillaType;
 
             public TransformName getNext() {
                 for (TransformName transformName : VALUES) {
@@ -207,11 +208,11 @@ public class HUDTextRenderer {
                 return FIXED;
             }
 
-            public ModelTransformation.Mode getVanillaTransformType() {
+            public ItemTransforms.TransformType getVanillaTransformType() {
                 return vanillaType;
             }
 
-            TransformName(ModelTransformation.Mode vanillaType) {
+            TransformName(ItemTransforms.TransformType vanillaType) {
                 this.vanillaType = vanillaType;
             }
 

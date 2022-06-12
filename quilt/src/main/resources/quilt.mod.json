@@ -1,26 +1,31 @@
 {
   "schema_version": 1,
   "mixin": [
-    "examplemod.mixins.json",
-    "examplemod-common.mixins.json"
+    "itemtransformhelper.mixins.json"
   ],
   "quilt_loader": {
     "group": "${group}",
-    "id": "examplemod",
+    "id": "itemtransformhelper",
     "version": "${version}",
-    "name": "Example Mod",
-    "description": "This is an example description! Tell everyone what your mod is about!",
-    "authors": ["Me!"],
+    "name": "Item Transform Helper",
+    "description": "Interactively change the position, scale, and rotation of an item.",
+    "authors": [
+      "TGG",
+      "ThexXTURBOXx",
+      "Romejanic",
+      "lehjr"
+    ],
     "contact": {
-      "sources": "https://github.com/architectury/architectury-templates"
+      "homepage": "https://www.planetminecraft.com/mod/item-transform-helper---interactively-rotate-scale-translate/",
+      "sources": "https://github.com/TheGreyGhost/ItemTransformHelper",
+      "issues": "https://github.com/TheGreyGhost/ItemTransformHelper/issues"
     },
-    "license": "Insert License Here",
-    "icon": "assets/examplemod/icon.png",
+    "license": "All rights reserved",
     "intermediate_mappings": "net.fabricmc:intermediary",
     "environment": "*",
     "entrypoints": {
       "init": [
-        "net.examplemod.quilt.ExampleModQuilt"
+        "itemtransformhelper.quilt.ItemTransformHelperQuilt"
       ]
     },
     "depends": [
@@ -34,11 +39,11 @@
       },
       {
         "id": "minecraft",
-        "version": ">=1.18.2"
+        "version": ">=1.19"
       },
       {
         "id": "architectury",
-        "version": ">=4.4.59"
+        "version": ">=5.6.22"
       }
     ]
   }
